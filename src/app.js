@@ -4,41 +4,13 @@ import { DB } from "https://deno.land/x/sqlite@v3.7.0/mod.ts";
 import * as path from "https://deno.land/std@0.152.0/path/posix.ts";
 import * as mediaTypes from "https://deno.land/std@0.151.0/media_types/mod.ts";
 import userMiddleware from "./utils/userMiddleware.js";
+import serveStaticFile from "./utils/serveStaticFile.js";
 
 import * as controller from "./controller.js";
 import * as formController from "./form-controller.js";
 
-const key = await crypto.subtle.generateKey(
-  { name: "HMAC", hash: "SHA-512" },
-  true,
-  ["sign", "verify"]
-);
-
 // DEV only: noCache:true
 nunjucks.configure("templates", { autoescape: true, noCache: true });
-
-const serveStaticFile = async (base, ctx) => {
-  const url = new URL(ctx.request.url);
-  let file;
-  try {
-    file = await Deno.open(path.join(base, url.pathname.toString()), {
-      read: true,
-    });
-  } catch (_error) {
-    return ctx;
-  }
-  const { ext } = path.parse(url.pathname.toString());
-  const contentType = mediaTypes.contentType(ext);
-  if (contentType) {
-    ctx.response.status = 200;
-    ctx.response.body = file.readable; // Use readable stream
-    ctx.response.headers["Content-type"] = contentType;
-    ctx.response.status = 200;
-  } else {
-    Deno.close(file.rid);
-  }
-  return ctx;
-};
 
 export const handleRequest = async (request) => {
   const db = new DB("data/database.sqlite");
@@ -54,7 +26,7 @@ export const handleRequest = async (request) => {
       headers: {},
     },
   };
-  userMiddleware(ctx, key);
+  userMiddleware(ctx);
 
   const base = "assets";
   ctx = await serveStaticFile(base, ctx);
@@ -94,7 +66,7 @@ const router = async (ctx) => {
   if (url.pathname == "/login") {
     const method = ctx.request.method;
     if (method == "GET") return await controller.login(ctx);
-    if (method == "POST") return await formController.submitLogin(ctx, key);
+    if (method == "POST") return await formController.submitLogin(ctx);
   }
 
   return await controller.error404(ctx);

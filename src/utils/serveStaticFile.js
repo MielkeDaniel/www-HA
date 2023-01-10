@@ -1,3 +1,6 @@
+import * as path from "https://deno.land/std@0.152.0/path/posix.ts";
+import * as mediaTypes from "https://deno.land/std@0.151.0/media_types/mod.ts";
+
 const serveStaticFile = async (base, ctx) => {
   const url = new URL(ctx.request.url);
   let file;

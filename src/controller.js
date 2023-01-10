@@ -1,4 +1,3 @@
-import * as model from "./model.js";
 import { debug as Debug } from "https://deno.land/x/debug@0.2.0/mod.ts";
 
 const debug = Debug("app:controller");

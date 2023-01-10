@@ -1,0 +1,60 @@
+{% extends 'layout.html' %} {%block content%}
+<div class="container mx-auto flex flex-wrap items-center my-60">
+  <div
+    class="w-full md:w-1/2 p-4 text-center flex flex-col justify-center items-center mt-6"
+  >
+    <img
+      class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
+      src="/images/standard-pp.png"
+      alt="Profile Picture"
+    />
+    <form action="http://localhost:9000/uploadprofilepic" method="post">
+      <button
+        type="submit"
+        class="bg-yellow-400 text-white py-2 px-4 rounded-full mt-5 duration-200 hover:bg-yellow-500"
+      >
+        Change Profile Picture
+      </button>
+    </form>
+  </div>
+  <div class="w-full md:w-1/2 p-4">
+    <form action="http://localhost:9000/changeusername" method="post">
+      <div class="input-group">
+        <input
+          id="username"
+          required
+          type="text"
+          name="username"
+          autocomplete="off"
+          class="input"
+          value="{{user.name}}"
+        />
+        <label for="username" class="user-label">Username</label>
+      </div>
+      <button
+        class="bg-yellow-400 text-white py-2 px-4 rounded-full duration-200 hover:bg-yellow-500 mt-3 mb-6"
+      >
+        Change Username
+      </button>
+    </form>
+    <form action="http://localhost:9000/changedescription" method="post">
+      <div class="input-group">
+        <textarea id="description" required type="text" name="description"
+        autocomplete="off" class="input big-input" value="{{"Hi, I´m " +
+        user.name + "!"}}" cols="40" rows="5">Hi I´m {{user.name}}!</textarea>
+        <label for="description" class="user-label">Profiledescription</label>
+      </div>
+      <button
+        class="bg-yellow-400 text-white py-2 px-4 rounded-full duration-200 hover:bg-yellow-500 mt-3"
+      >
+        Change Profile Description
+      </button>
+    </form>
+    <form action="http://localhost:9000/logout" method="post">
+        <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4">
+          Log Out
+        </button>
+    </form>
+  </div>
+</div>
+{%endblock%}

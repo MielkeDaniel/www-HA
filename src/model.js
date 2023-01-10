@@ -1,13 +1,10 @@
-import { debug as Debug } from "https://deno.land/x/debug@0.2.0/mod.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-
-const debug = Debug("app:model");
 
 export const createUser = async (db, username, password) => {
   password = await bcrypt.hash(password);
   await db.query(
-    `INSERT INTO users (username, password, accountType) VALUES (?, ?, ?);`,
-    [username, password, "standard"]
+    `INSERT INTO users (username, password, description, accountType) VALUES (?, ?, ?, ?);`,
+    [username, password, "Hi, I´m " + username + "!", "standard"]
   );
   let user = await db.query(`SELECT * FROM users WHERE username = ?;`, [
     username,
@@ -15,7 +12,8 @@ export const createUser = async (db, username, password) => {
   user = {
     username: user[0][0],
     password: user[0][1],
-    accountType: user[0][2],
+    description: user[0][2],
+    accountType: user[0][3],
   };
   return user;
 };

@@ -14,7 +14,7 @@ export const submitLogin = async (ctx) => {
   if (isPasswordValid) {
     const payload = {
       iss: username,
-      exp: Date.now() + 1000 * 60 * 60 * 24, // 1 day
+      exp: Date.now() + 1000 * 60 * 60, // 1 hour
     };
     const jwt = await create(
       { alg: "HS512", typ: "JWT" },
@@ -28,7 +28,7 @@ export const submitLogin = async (ctx) => {
   } else {
     ctx.response.body = ctx.nunjucks.render("login.html", {
       form: { username: username, password: password },
-      errors: { password: "Invalid password" },
+      errors: { password: "Invalid password or username" },
     });
     ctx.response.status = 200;
     ctx.response.headers["content-type"] = "text/html";
@@ -65,5 +65,12 @@ export const submitCreateAccount = async (ctx) => {
     ctx.response.headers["content-type"] = "text/html";
   }
 
+  return ctx;
+};
+
+export const logout = (ctx) => {
+  ctx.response.headers["Set-Cookie"] = `jwt=; HttpOnly; Path=/`;
+  ctx.response.status = 303;
+  ctx.response.headers["Location"] = "/";
   return ctx;
 };

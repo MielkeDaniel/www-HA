@@ -8,6 +8,8 @@ const router = async (ctx) => {
   if (url.pathname == "/functionality")
     return await controller.functionality(ctx);
   if (url.pathname == "/governance") return await controller.governance(ctx);
+  // logout route
+  if (url.pathname == "/logout") return formController.logout(ctx);
   if (url.pathname == "/about") return await controller.about(ctx);
   if (url.pathname == "/createaccount") {
     const method = ctx.request.method;
@@ -18,6 +20,12 @@ const router = async (ctx) => {
     const method = ctx.request.method;
     if (method == "GET") return await controller.login(ctx);
     if (method == "POST") return await formController.submitLogin(ctx);
+  }
+  const profileRegex = /^\/profile\/[a-zA-Z0-9]+$/;
+  if (profileRegex.test(url.pathname)) {
+    const method = ctx.request.method;
+    if (method == "GET") return await controller.profile(ctx);
+    if (method == "POST") return await formController.submitProfile(ctx);
   }
 
   return await controller.error404(ctx);

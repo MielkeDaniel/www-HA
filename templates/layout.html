@@ -42,10 +42,14 @@
             <li class="home">
               <a href="/"><img src="/images/logo.svg" alt="nav-logo" /></a>
             </li>
-            <li><a href="functionality">Functionality</a></li>
-            <li><a href="governance">Governance</a></li>
-            <li><a href="about">About DFINITY</a></li>
-            <li><a href="login">Login</a></li>
+            <li><a href="/functionality">Functionality</a></li>
+            <li><a href="/governance">Governance</a></li>
+            <li><a href="/about">About DFINITY</a></li>
+            {% if user.name %}
+            <li><a href={{"profile/" + user.name}}>Profile</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -60,18 +64,18 @@
     <footer class="footer-container">
       <ul class="footer-links">
         <li><h3 class="footerlist-heading">Pages</h3></li>
-        <li><a href="functionality">Functionality</a></li>
-        <li><a href="governance">Governance</a></li>
-        <li><a href="about">About DFINITY</a></li>
-        <li><a href="login">Login Formula</a></li>
+        <li><a href="/functionality">Functionality</a></li>
+        <li><a href="/governance">Governance</a></li>
+        <li><a href="/about">About DFINITY</a></li>
+        <li><a href="/login">Login Formula</a></li>
       </ul>
 
       <ul class="footer-links">
         <li><h3 class="footerlist-heading">Informational</h3></li>
-        <li><a href="imprint">Imprint</a></li>
-        <li><a href="privacy">Privacy Policy</a></li>
-        <li><a href="colophon">Colophon</a></li>
-        <li><a href="dokumentation/index">Documentation</a></li>
+        <li><a href="/imprint">Imprint</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+        <li><a href="/colophon">Colophon</a></li>
+        <li><a href="/dokumentation/index">Documentation</a></li>
       </ul>
 
       <p class="disclaimer">

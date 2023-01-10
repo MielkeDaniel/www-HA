@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="images/image-logo.png"
+      type="image/x-icon"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/index.css" type="text/css" />
+    <!-- CSS END -->
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine&family=Titillium+Web:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Fonts END -->
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div id="menuToggle">
+        <input type="checkbox" />
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <div class="lg-topbar">
+          <a class="navlogo-container" href="/"
+            ><img class="lg-nav-logo" src="/images/logo.svg" alt="nav-logo"
+          /></a>
+          <ul id="nav-menu">
+            <li class="home">
+              <a href="/"><img src="/images/logo.svg" alt="nav-logo" /></a>
+            </li>
+            <li><a href="functionality">Functionality</a></li>
+            <li><a href="governance">Governance</a></li>
+            <li><a href="about">About DFINITY</a></li>
+            <li><a href="login">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar END -->
+
+    <!-- Individual Page Content -->
+    {%block content%} {%endblock%}
+    <!-- Individual Page Content END -->
+
+    <!-- FOOTER -->
+    <footer class="footer-container">
+      <ul class="footer-links">
+        <li><h3 class="footerlist-heading">Pages</h3></li>
+        <li><a href="functionality">Functionality</a></li>
+        <li><a href="governance">Governance</a></li>
+        <li><a href="about">About DFINITY</a></li>
+        <li><a href="login">Login Formula</a></li>
+      </ul>
+
+      <ul class="footer-links">
+        <li><h3 class="footerlist-heading">Informational</h3></li>
+        <li><a href="imprint">Imprint</a></li>
+        <li><a href="privacy">Privacy Policy</a></li>
+        <li><a href="colophon">Colophon</a></li>
+        <li><a href="dokumentation/index">Documentation</a></li>
+      </ul>
+
+      <p class="disclaimer">
+        The information contained in this website is for informational purposes
+        only. It is not intended to be a substitute for legal counsel. The
+        information is provided without warranty of any kind.
+      </p>
+    </footer>
+    <!-- FOOTER END -->
+
+    <!-- JAVASCRIPT (can also be disabled) -->
+    <script src="js/particles.min.js"></script>
+    <script src="js/custom.js"></script>
+  </body>
+</html>

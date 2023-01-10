@@ -1,0 +1,62 @@
+{% extends 'layout.html' %} {%block content%}
+<!-- Header section  -->
+<header class="section-padding">
+  <h1 class="cf-page-heading">Become a part of the Network!</h1>
+  <p class="heading-subtitle">
+    Login or
+    <a href="createaccount" class="clickableText">create an account</a> to
+    interact with the Network!
+  </p>
+</header>
+<!-- Header section END -->
+
+<!-- Form section -->
+<section class="section-padding">
+  <form action="http://localhost:9000/login" method="post">
+    <!-- Personal Infos -->
+    <h2 class="cf-form-group-heading">Log In</h2>
+    <div class="padding-bottom">
+      <div class="input-group">
+        <input
+          id="username"
+          required
+          type="text"
+          name="username"
+          autocomplete="off"
+          class="input"
+          value="{{form.username}}"
+        />
+        <label for="username" class="user-label">Username</label>
+      </div>
+      <h2 class="cf-form-group-heading padding-top">Enter Password</h2>
+      {% if errors.password %}
+      <p class="text-red-500 pb-5">{{errors.password}}</p>
+      {% endif %}
+      <div class="input-group">
+        <input
+          id="password"
+          required
+          type="password"
+          name="password"
+          autocomplete="off"
+          class="input"
+        />
+        <label for="password" class="user-label">Password</label>
+      </div>
+    </div>
+    <!-- Personal Infos END -->
+
+    <!-- Submit buttons -->
+    <div class="cf-buttons-flex">
+      <div class="button-wrapper">
+        <button class="btn" type="reset"><span>RESET</span></button>
+      </div>
+      <span class="cf-splitter"></span>
+      <div class="button-wrapper">
+        <button class="btn" type="submit"><span>SUBMIT</span></button>
+      </div>
+    </div>
+    <!-- Submit buttons END -->
+  </form>
+</section>
+{%endblock%}

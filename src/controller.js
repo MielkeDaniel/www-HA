@@ -1,69 +1,105 @@
-export function error404(ctx) {
+import * as model from "./model.js";
+
+export const error404 = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("error404.html", {});
   ctx.response.status = 404;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function functionality(ctx) {
+export const functionality = async (ctx) => {
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("functionality.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function governance(ctx) {
+export const governance = async (ctx) => {
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("governance.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function createAccount(ctx) {
+export const createAccount = async (ctx) => {
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("createAccount.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function login(ctx) {
+export const login = async (ctx) => {
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("login.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function about(ctx) {
+export const about = async (ctx) => {
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("about.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function index(ctx) {
+export const index = async (ctx) => {
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("index.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
 
-export function profile(ctx) {
+export const profile = async (ctx) => {
+  if (!ctx.user) {
+    // redirect to login
+    ctx.redirect = new Response(null, {
+      status: 303,
+      headers: { Location: "/login" },
+    });
+    return ctx;
+  }
+  const user = await model.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("profile.html", {
-    user: { name: ctx.user },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
-}
+};
+
+export const changePassword = async (ctx) => {
+  console.log("changePassword");
+  if (!ctx.user) {
+    // redirect to login
+    ctx.redirect = new Response(null, {
+      status: 303,
+      headers: { Location: "/login" },
+    });
+    return ctx;
+  }
+  const user = await model.getUser(ctx.db, ctx.user);
+  ctx.response.body = ctx.nunjucks.render("changePassword.html", {
+    user,
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};

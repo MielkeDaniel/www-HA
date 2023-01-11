@@ -1,26 +1,18 @@
 import * as model from "./model.js";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-import { create } from "https://deno.land/x/djwt@v2.2/mod.ts";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
+import generateJWT from "./utils/generateJWT.js";
 
 export const submitLogin = async (ctx) => {
   const formdata = await ctx.request.formData();
   const username = formdata.get("username");
   const password = formdata.get("password");
 
-  const user = await model.getUser(ctx.db, username);
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const userPw = await model.getUserPassword(ctx.db, username);
+  const isPasswordValid = await bcrypt.compare(password, userPw);
 
   if (isPasswordValid) {
-    const payload = {
-      iss: username,
-      exp: Date.now() + 1000 * 60 * 60, // 1 hour
-    };
-    const jwt = await create(
-      { alg: "HS512", typ: "JWT" },
-      payload,
-      Deno.env.get("JWT_SECRET")
-    );
+    const jwt = await generateJWT(username);
     ctx.response.headers["Set-Cookie"] = `jwt=${jwt}; HttpOnly; Path=/`;
     ctx.response.status = 303;
     ctx.response.headers["Location"] = "/";
@@ -72,5 +64,30 @@ export const logout = (ctx) => {
   ctx.response.headers["Set-Cookie"] = `jwt=; HttpOnly; Path=/`;
   ctx.response.status = 303;
   ctx.response.headers["Location"] = "/";
+  return ctx;
+};
+
+export const changeUsername = async (ctx) => {
+  const formdata = await ctx.request.formData();
+  const username = ctx.user;
+  const newUsername = formdata.get("username");
+
+  model.changeUsername(ctx.db, username, newUsername);
+  const jwt = await generateJWT(newUsername);
+  ctx.response.headers["Set-Cookie"] = `jwt=${jwt}; HttpOnly; Path=/`;
+  ctx.user = newUsername;
+  ctx.response.status = 303;
+  ctx.response.headers["Location"] = "/profile/" + newUsername;
+  return ctx;
+};
+
+export const changeDescription = async (ctx) => {
+  const formdata = await ctx.request.formData();
+  const username = ctx.user;
+  const description = formdata.get("description");
+
+  model.changeDescription(ctx.db, username, description);
+  ctx.response.status = 303;
+  ctx.response.headers["Location"] = "/profile/" + username;
   return ctx;
 };

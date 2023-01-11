@@ -27,7 +27,7 @@
           name="username"
           autocomplete="off"
           class="input"
-          value="{{user.name}}"
+          value="{{user.username}}"
         />
         <label for="username" class="user-label">Username</label>
       </div>
@@ -41,7 +41,7 @@
       <div class="input-group">
         <textarea id="description" required type="text" name="description"
         autocomplete="off" class="input big-input" value="{{"Hi, I´m " +
-        user.name + "!"}}" cols="40" rows="5">Hi I´m {{user.name}}!</textarea>
+        user.name + "!"}}" cols="40" rows="5">{{user.description}}</textarea>
         <label for="description" class="user-label">Profiledescription</label>
       </div>
       <button
@@ -50,11 +50,18 @@
         Change Profile Description
       </button>
     </form>
-    <form action="http://localhost:9000/logout" method="post">
-        <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4">
-          Log Out
-        </button>
-    </form>
+    <div class="flex">
+        <form action={{"http://localhost:9000/profile/" + user.username + "/changepassword"}} method="post">
+          <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4 mr-4">
+            Change Password
+          </button>
+      </form>
+        <form action="http://localhost:9000/logout" method="post">
+            <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4">
+              Log Out
+            </button>
+        </form>
+    </div>
   </div>
 </div>
 {%endblock%}

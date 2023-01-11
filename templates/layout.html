@@ -45,8 +45,8 @@
             <li><a href="/functionality">Functionality</a></li>
             <li><a href="/governance">Governance</a></li>
             <li><a href="/about">About DFINITY</a></li>
-            {% if user.name %}
-            <li><a href={{"profile/" + user.name}}>Profile</a></li>
+            {% if user.username %}
+            <li><a href={{"profile/" + user.username}}>Profile</a></li>
             {% else %}
             <li><a href="/login">Login</a></li>
             {% endif %}

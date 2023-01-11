@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="shortcut icon"
-      href="images/image-logo.png"
+      href="/images/image-logo.png"
       type="image/x-icon"
     />
 
@@ -87,7 +87,41 @@
     <!-- FOOTER END -->
 
     <!-- JAVASCRIPT (can also be disabled) -->
-    <script src="js/particles.min.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="/js/particles.min.js"></script>
+    <script src="/js/custom.js"></script>
+    <script>
+      function previewFile() {
+        const fileInput = document.getElementById("fileInput");
+        const preview = document.getElementById("profilePicture");
+      
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        if (!(file.type === "image/png" || file.type === "image/jpeg")) {
+          alert("Please upload a valid image (jpeg or png) file.");
+          return;
+        }
+      
+        reader.onloadend = function() {
+          preview.src = reader.result;
+          // create and display a button, instead of the fileInput, to upload the image to the server
+          const button = document.createElement("button");
+          button.setAttribute("type", "submit");
+          button.setAttribute("class", "btn");
+          span = button.appendChild(document.createElement("span"));
+          span.innerHTML = "Upload";
+
+          const profileDropBox = document.getElementById("profileDropBox");
+          profileDropBox.children[0].classList.add("hidden");
+          profileDropBox.appendChild(button);
+        }
+      
+        if (file) {
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = "";
+        }
+      }
+    </script>
   </body>
 </html>

@@ -33,6 +33,8 @@ const router = async (ctx) => {
     return await formController.changeUsername(ctx);
   if (url.pathname == "/changedescription")
     return await formController.changeDescription(ctx);
+  if (url.pathname == "/imageupload")
+    return await formController.imageUpload(ctx);
   // 404
   return await controller.error404(ctx);
 };

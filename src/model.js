@@ -63,3 +63,11 @@ export const changeDescription = async (db, user, description) => {
   ]);
   return true;
 };
+
+export const imageUpload = async (db, user, image) => {
+  await db.query(`UPDATE users SET profilePicture = ? WHERE username = ?;`, [
+    image,
+    user,
+  ]);
+  return true;
+};

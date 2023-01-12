@@ -6,7 +6,14 @@ const router = async (ctx) => {
   if (ctx.response.status === 200) return ctx;
   const url = new URL(ctx.request.url);
   if (url.pathname == "/") return await controller.index(ctx);
-  if (url.pathname == "/news") return await controller.news(ctx);
+  if (url.pathname.includes("/news")) {
+    // check if the pathname is /news/number
+    const newsRegex = /^\/news\/[0-9]+$/;
+    if (newsRegex.test(url.pathname)) {
+      const newsId = url.pathname.split("/")[2];
+      return await controller.newsSubPage(ctx, newsId);
+    } else if (url.pathname == "/news") return await controller.news(ctx);
+  }
   if (url.pathname == "/createnews") return await controller.createNews(ctx);
 
   if (url.pathname == "/createaccount") {
@@ -21,8 +28,7 @@ const router = async (ctx) => {
   }
 
   // profile/username
-  const profileRegex = /^\/profile\/[a-zA-Z0-9]+$/;
-  if (profileRegex.test(url.pathname)) {
+  if (url.pathname.match(/^\/profile\/[a-zA-Z0-9]+$/)) {
     const method = ctx.request.method;
     if (method == "GET") {
       const username = url.pathname.split("/")[2];
@@ -32,14 +38,14 @@ const router = async (ctx) => {
   }
 
   // profile/username/changepassword
-  const changePwRegex = /^\/profile\/[a-zA-Z0-9]+\/changepassword/;
-  if (changePwRegex.test(url.pathname)) {
+  if (url.pathname.match(/^\/profile\/[a-zA-Z0-9]+\/changepassword/)) {
     const method = ctx.request.method;
     if (method == "GET") return await controller.changePassword(ctx);
     if (method == "POST") return await formController.submitChangePassword(ctx);
   }
 
   // API
+  if (url.pathname.match(/\/comment\/[0-9]+$/)) console.log("EEEEEY");
   if (url.pathname == "/uploadnews") await formController.uploadNews(ctx);
   if (url.pathname == "/logout") return formController.logout(ctx);
   if (url.pathname == "/changeusername")

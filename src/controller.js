@@ -110,3 +110,24 @@ export const createNews = async (ctx) => {
   }
   return ctx;
 };
+
+export const newsSubPage = async (ctx, newsId) => {
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  const news = await newsModel.getNewsById(ctx, newsId);
+  if (news === false || news === undefined) {
+    ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
+      errors: { news: "News-article not found!" },
+      user,
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  } else {
+    ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
+      news,
+      user,
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  }
+  return ctx;
+};

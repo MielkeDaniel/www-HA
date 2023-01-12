@@ -29,3 +29,17 @@ export const getNews = async (ctx) => {
   });
   return sortedNews;
 };
+
+export const getNewsById = async (ctx, id) => {
+  const news = await ctx.db.query(`SELECT * FROM news WHERE id = ?;`, [id]);
+  if (news.length === 0) return false;
+  return {
+    id: news[0][0],
+    title: news[0][1],
+    subtitle: news[0][2],
+    article: news[0][3],
+    image: news[0][4] || "images/dfinity-logo.png",
+    author: news[0][5],
+    date: news[0][6],
+  };
+};

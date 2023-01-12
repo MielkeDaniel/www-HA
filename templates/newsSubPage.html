@@ -1,0 +1,46 @@
+{% extends 'layout.html' %} {%block content%}
+<div class="section-padding">Hi</div>
+
+{% if errors.news %}
+<div class="h-screen">
+  <h1 class="pt-80 text-center text-gray-400">{{errors.news}}</h1>
+</div>
+{% else %}
+<!-- Article -->
+<div class="section-padding">
+  <h1 class="mt-32 text-5xl text-yellow-200 mb-5">{{news.title}}</h1>
+  <div class="flex justify-between">
+    <div class="w-1/2">
+      <h2 class="text-2xl text-gray-300 mb-10">{{news.subtitle}}</h2>
+      <p class="text-gray-400 text-2xl">{{news.article}}</p>
+    </div>
+    <div>
+      <img
+        class="max-h-80 mx-auto rounded-xl bg-white p-1"
+        id="imagePreview"
+        alt="Article Preview"
+        src="/{{news.image}}"
+      />
+    </div>
+  </div>
+  <!-- Article END -->
+
+  <!-- Comment box -->
+  <div class="mt-10">
+    <form action="http://localhost:9000/comment/{{news.id}}" method="post">
+      <div class="input-group mb-10">
+        <textarea
+          class="textarea w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
+          name="comment"
+          required
+          placeholder="Comment"
+        ></textarea>
+      </div>
+      <button class="btn" type="submit"><span>Comment</span></button>
+    </form>
+  </div>
+  <!-- Comment box END -->
+
+  {% endif %}
+</div>
+{%endblock%}

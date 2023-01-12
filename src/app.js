@@ -3,6 +3,7 @@ import nunjucks from "https://deno.land/x/nunjucks@3.2.3/mod.js";
 import { DB } from "https://deno.land/x/sqlite@v3.7.0/mod.ts";
 
 import userMiddleware from "./utils/userMiddleware.js";
+import formMiddleware from "./utils/formMiddleware.js";
 import serveStaticFile from "./utils/serveStaticFile.js";
 import router from "./router.js";
 
@@ -29,6 +30,7 @@ export const handleRequest = async (request) => {
   ctx = await serveStaticFile(base, ctx);
 
   ctx = await userMiddleware(ctx);
+  //await formMiddleware(ctx);
 
   let result = await router(ctx);
 

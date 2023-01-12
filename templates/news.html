@@ -1,3 +1,30 @@
 {% extends 'layout.html' %} {%block content%}
-<h1 class="mt-40">404</h1>
+<div class="section-padding">
+  <h1 class="mt-40 text-4xl text-yellow-200 mb-20">News Page</h1>
+
+  {% for news in news %}
+  <div
+    class="flex justify-between my-20 items-center border-2 py-10 px-32 rounded-2xl border-yelow-300"
+  >
+    <div class="w-1/2">
+      <h1 class="text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
+      <h2 class="text-2xl text-yellow-200 mb-5">{{news.subtitle}}</h2>
+    </div>
+    <div>
+      <img
+        class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4 bg-white p-3"
+        id="imagePreview"
+        alt="Article Preview"
+        src="/{{news.image}}"
+      />
+    </div>
+  </div>
+  {% endfor %} {% if user.accountType === "admin" %}
+  <div class="mt-10">
+    <form action="http://localhost:9000/createnews" method="get">
+      <button class="btn" type="submit"><span>Create News</span></button>
+    </form>
+  </div>
+  {% endif %}
+</div>
 {%endblock%}

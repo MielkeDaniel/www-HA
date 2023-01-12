@@ -1,5 +1,6 @@
 import * as readUserModel from "./model/readUserModel.js";
 import * as changeUserModel from "./model/changeUserModel.js";
+import * as newsModel from "./model/newsModel.js";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
@@ -7,6 +8,7 @@ import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 import generateJWT from "./utils/generateJWT.js";
 import validateImage from "./utils/validateImage.js";
 import uploadProfilePicture from "./utils/uploadProfilePicture.js";
+import uploadArticleImage from "./utils/safeArticleImage.js";
 
 export const submitLogin = async (ctx) => {
   const formdata = await ctx.request.formData();
@@ -160,4 +162,28 @@ export const imageUpload = async (ctx) => {
     });
     return ctx;
   }
+};
+
+export const uploadNews = async (ctx) => {
+  const formdata = await ctx.request.formData();
+  const title = formdata.get("title");
+  const subtitle = formdata.get("subtitle");
+  const image = formdata.get("image");
+  const article = formdata.get("article");
+
+  const imageName = await uploadArticleImage(image);
+
+  await newsModel.createNews(
+    ctx,
+    title,
+    subtitle,
+    article,
+    imageName,
+    ctx.user
+  );
+  ctx.redirect = new Response(null, {
+    status: 302,
+    headers: { Location: "/news" },
+  });
+  return ctx;
 };

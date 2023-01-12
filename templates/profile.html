@@ -6,14 +6,14 @@
     <img
       class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
       src={{"/" + user.profilePicture}}
-      id="profilePicture"
+      id="imagePreview"
       alt="Profile Picture"
     />
     {% else %}
     <img
       class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
       src="/images/standard-pp.png"
-      id="profilePicture"
+      id="imagePreview"
       alt="Profile Picture"
     />
     {% endif %}
@@ -29,7 +29,7 @@
               <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
           </svg>
           <span class="mt-2 text-base leading-normal">Upload Profile Picture</span>
-          <input type='file' required class="hidden" id="fileInput" name="image" onchange="previewFile()" />
+          <input type='file' required class="hidden" id="fileInput" name="image" />
         </label>
         <button id="uploadProfilePicButtton" class="btn mt-3" type="submit"><span>Upload</span></button>
       </div>

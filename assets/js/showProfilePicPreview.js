@@ -2,8 +2,7 @@ let uploadButton;
 
 function previewFile() {
   const fileInput = document.getElementById("fileInput");
-  const preview = document.getElementById("profilePicture");
-
+  const preview = document.getElementById("imagePreview");
   const file = fileInput.files[0];
   const reader = new FileReader();
 
@@ -15,9 +14,8 @@ function previewFile() {
   reader.onloadend = function () {
     preview.src = reader.result;
     const profileDropBox = document.getElementById("profileDropBox");
-    profileDropBox.children[0].classList.add("hidden");
-
-    uploadButton.removeAttribute("style");
+    uploadButton && profileDropBox.children[0].classList.add("hidden");
+    uploadButton?.removeAttribute("style");
   };
 
   if (file) {
@@ -27,9 +25,10 @@ function previewFile() {
   }
 }
 
-function hideUploadButton() {
+function main() {
+  document.getElementById("fileInput")?.addEventListener("change", previewFile);
   uploadButton = document.getElementById("uploadProfilePicButtton");
-  uploadButton.style.display = "none";
+  if (uploadButton) uploadButton.style.display = "none";
 }
 
-hideUploadButton();
+main();

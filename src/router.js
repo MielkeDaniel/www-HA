@@ -6,6 +6,9 @@ const router = async (ctx) => {
   if (ctx.response.status === 200) return ctx;
   const url = new URL(ctx.request.url);
   if (url.pathname == "/") return await controller.index(ctx);
+  if (url.pathname == "/news") return await controller.news(ctx);
+  if (url.pathname == "/createnews") return await controller.createNews(ctx);
+
   if (url.pathname == "/createaccount") {
     const method = ctx.request.method;
     if (method == "GET") return await controller.createAccount(ctx);
@@ -37,6 +40,7 @@ const router = async (ctx) => {
   }
 
   // API
+  if (url.pathname == "/uploadnews") await formController.uploadNews(ctx);
   if (url.pathname == "/logout") return formController.logout(ctx);
   if (url.pathname == "/changeusername")
     return await formController.changeUsername(ctx);

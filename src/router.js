@@ -24,8 +24,11 @@ const router = async (ctx) => {
   if (profileRegex.test(url.pathname)) return await controller.profile(ctx);
 
   const changePwRegex = /^\/profile\/[a-zA-Z0-9]+\/changepassword/;
-  if (changePwRegex.test(url.pathname))
-    return await controller.changePassword(ctx);
+  if (changePwRegex.test(url.pathname)) {
+    const method = ctx.request.method;
+    if (method == "GET") return await controller.changePassword(ctx);
+    if (method == "POST") return await formController.submitChangePassword(ctx);
+  }
 
   // API
   if (url.pathname == "/logout") return formController.logout(ctx);

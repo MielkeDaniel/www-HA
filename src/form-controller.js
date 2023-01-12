@@ -96,6 +96,39 @@ export const changeDescription = async (ctx) => {
   return ctx;
 };
 
+export const submitChangePassword = async (ctx) => {
+  const userPw = await model.getUserPassword(ctx.db, ctx.user);
+  const formData = await ctx.request.formData();
+  const oldPassword = formData.get("oldPw");
+  const newPassword = formData.get("newPw");
+  const newPassword2 = formData.get("newValPw");
+
+  const isPasswordValid = await bcrypt.compare(oldPassword, userPw);
+  const isPasswordMatch = newPassword === newPassword2;
+  const isNotSamePassword = newPassword !== oldPassword;
+
+  if (isPasswordValid && isPasswordMatch && isNotSamePassword) {
+    model.changePassword(ctx.db, ctx.user, newPassword);
+    ctx.response.status = 303;
+    ctx.response.headers["Location"] = "/profile/" + ctx.user;
+  } else {
+    ctx.response.body = ctx.nunjucks.render("changePassword.html", {
+      user: { username: ctx.user },
+      form: { oldPw: oldPassword, newPw: newPassword, newValPw: newPassword2 },
+      errors: {
+        oldPassword: !isPasswordValid ? "Invalid password" : "",
+        newPassword: !isPasswordMatch ? "Passwords do not match" : "",
+        samePassword: !isNotSamePassword
+          ? "New password cannot be the same"
+          : "",
+      },
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  }
+  return ctx;
+};
+
 export const imageUpload = async (ctx) => {
   const formdata = await ctx.request.formData();
   const image = formdata.get("image");
@@ -104,6 +137,7 @@ export const imageUpload = async (ctx) => {
 
   if (error) {
     ctx.response.body = ctx.nunjucks.render("login.html", {
+      user: { username: ctx.user },
       errors: error,
     });
     ctx.response.status = 200;

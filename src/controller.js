@@ -86,7 +86,6 @@ export const profile = async (ctx) => {
 };
 
 export const changePassword = async (ctx) => {
-  console.log("changePassword");
   if (!ctx.user) {
     // redirect to login
     ctx.redirect = new Response(null, {

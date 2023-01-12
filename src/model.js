@@ -71,3 +71,12 @@ export const imageUpload = async (db, user, image) => {
   ]);
   return true;
 };
+
+export const changePassword = async (db, user, password) => {
+  password = await bcrypt.hash(password);
+  await db.query(`UPDATE users SET password = ? WHERE username = ?;`, [
+    password,
+    user,
+  ]);
+  return true;
+};

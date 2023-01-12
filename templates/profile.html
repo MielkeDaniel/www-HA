@@ -1,14 +1,23 @@
 {% extends 'layout.html' %} {%block content%}
-<div class="container mx-auto flex flex-wrap items-center my-60">
-  <div
-    class="w-full md:w-1/2 p-4 text-center flex flex-col justify-center items-center mt-6"
-  >
+<h1 class="text-gray-400 text-5xl mt-44 mb-20 text-center">Profile by {{user.username}}</h1>
+<div class="container mx-auto flex flex-wrap items-center mb-60">
+  <div class="w-full md:w-1/2 p-4 text-center flex flex-col justify-center items-center mt-6">
+    {% if user.profilePicture %}
+    <img
+      class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
+      src={{"/" + user.profilePicture}}
+      id="profilePicture"
+      alt="Profile Picture"
+    />
+    {% else %}
     <img
       class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
       src="/images/standard-pp.png"
       id="profilePicture"
       alt="Profile Picture"
     />
+    {% endif %}
+    
     {% if errors.image %}
     <p class="text-red-500 pb-5">{{errors.image}}</p>
     {% endif %}
@@ -60,7 +69,7 @@
       </button>
     </form>
     <div class="flex">
-        <form action={{"http://localhost:9000/profile/" + user.username + "/changepassword"}} method="post">
+        <form action={{"http://localhost:9000/profile/" + user.username + "/changepassword"}} method="get">
           <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4 mr-4">
             Change Password
           </button>

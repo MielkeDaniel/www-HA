@@ -1,0 +1,34 @@
+{% extends 'layout.html' %} {%block content%} {% if profile.username %}
+<h1 class="text-gray-400 text-5xl mt-44 mb-36 text-center">
+  Profile by {{profile.username}}
+</h1>
+<div class="mx-auto flex items-center mb-80">
+  <div
+    class="w-full md:w-1/2 p-4 text-center flex flex-col justify-center items-center"
+  >
+    {% if user.profilePicture %} <img class="w-64 mx-auto rounded-xl border-4
+    border-yellow-300 border-4" src={{"/" + profile.profilePicture}}
+    id="profilePicture" alt="Profile Picture" /> {% else %}
+    <img
+      class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
+      src="/images/standard-pp.png"
+      id="profilePicture"
+      alt="Profile Picture"
+    />
+    {% endif %}
+  </div>
+  <div class="w-full md:w-1/2 p-4">
+    <div class="mb-10">
+      <h2 class="text-2xl text-yellow-200 mb-5 -mt-10">Username</h2>
+      <p class="text-gray-400 text-2xl">{{profile.username}}</p>
+    </div>
+
+    <h2 class="text-2xl text-yellow-200 mb-5">About {{profile.username}}</h2>
+    <p class="text-gray-400 text-2xl">{{profile.description}}</p>
+  </div>
+</div>
+{% else %}
+<div class="h-screen">
+  <h1 class="pt-80 text-center text-gray-400">404 - User does not exist</h1>
+</div>
+{% endif %} {%endblock%}

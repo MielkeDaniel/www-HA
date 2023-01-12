@@ -42,11 +42,10 @@
             <li class="home">
               <a href="/"><img src="/images/logo.svg" alt="nav-logo" /></a>
             </li>
-            <li><a href="/functionality">Functionality</a></li>
-            <li><a href="/governance">Governance</a></li>
-            <li><a href="/about">About DFINITY</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/news">News</a></li>
             {% if user.username %}
-            <li><a href={{"profile/" + user.username}}>Profile</a></li>
+            <li><a href={{"/profile/" + user.username}}>Profile</a></li>
             {% else %}
             <li><a href="/login">Login</a></li>
             {% endif %}
@@ -89,39 +88,6 @@
     <!-- JAVASCRIPT (can also be disabled) -->
     <script src="/js/particles.min.js"></script>
     <script src="/js/custom.js"></script>
-    <script>
-      function previewFile() {
-        const fileInput = document.getElementById("fileInput");
-        const preview = document.getElementById("profilePicture");
-      
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        
-        if (!(file.type === "image/png" || file.type === "image/jpeg")) {
-          alert("Please upload a valid image (jpeg or png) file.");
-          return;
-        }
-      
-        reader.onloadend = function() {
-          preview.src = reader.result;
-          // create and display a button, instead of the fileInput, to upload the image to the server
-          const button = document.createElement("button");
-          button.setAttribute("type", "submit");
-          button.setAttribute("class", "btn");
-          span = button.appendChild(document.createElement("span"));
-          span.innerHTML = "Upload";
-
-          const profileDropBox = document.getElementById("profileDropBox");
-          profileDropBox.children[0].classList.add("hidden");
-          profileDropBox.appendChild(button);
-        }
-      
-        if (file) {
-          reader.readAsDataURL(file);
-        } else {
-          preview.src = "";
-        }
-      }
-    </script>
+    <script src="/js/showProfilePicPreview.js"></script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import * as model from "./model.js";
+import * as readUserModel from "./model/readUserModel.js";
 
 export const error404 = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("error404.html", {});
@@ -8,7 +8,7 @@ export const error404 = (ctx) => {
 };
 
 export const functionality = async (ctx) => {
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("functionality.html", {
     user,
   });
@@ -18,7 +18,7 @@ export const functionality = async (ctx) => {
 };
 
 export const governance = async (ctx) => {
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("governance.html", {
     user,
   });
@@ -28,7 +28,7 @@ export const governance = async (ctx) => {
 };
 
 export const createAccount = async (ctx) => {
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("createAccount.html", {
     user,
   });
@@ -38,7 +38,7 @@ export const createAccount = async (ctx) => {
 };
 
 export const login = async (ctx) => {
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("login.html", {
     user,
   });
@@ -48,7 +48,7 @@ export const login = async (ctx) => {
 };
 
 export const about = async (ctx) => {
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("about.html", {
     user,
   });
@@ -58,7 +58,7 @@ export const about = async (ctx) => {
 };
 
 export const index = async (ctx) => {
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("index.html", {
     user,
   });
@@ -67,21 +67,25 @@ export const index = async (ctx) => {
   return ctx;
 };
 
-export const profile = async (ctx) => {
-  if (!ctx.user) {
-    // redirect to login
-    ctx.redirect = new Response(null, {
-      status: 303,
-      headers: { Location: "/login" },
+export const profile = async (ctx, profilename) => {
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  const userInfo = await readUserModel.getUser(ctx.db, profilename);
+  const isProfileOwner = profilename === ctx.user;
+
+  if (isProfileOwner) {
+    ctx.response.body = ctx.nunjucks.render("profile.html", {
+      user,
     });
-    return ctx;
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  } else {
+    ctx.response.body = ctx.nunjucks.render("staticProfile.html", {
+      profile: userInfo,
+      user,
+    });
+    ctx.response.status = userInfo ? 200 : 404;
+    ctx.response.headers["content-type"] = "text/html";
   }
-  const user = await model.getUser(ctx.db, ctx.user);
-  ctx.response.body = ctx.nunjucks.render("profile.html", {
-    user,
-  });
-  ctx.response.status = 200;
-  ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
 
@@ -94,7 +98,7 @@ export const changePassword = async (ctx) => {
     });
     return ctx;
   }
-  const user = await model.getUser(ctx.db, ctx.user);
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
   ctx.response.body = ctx.nunjucks.render("changePassword.html", {
     user,
   });

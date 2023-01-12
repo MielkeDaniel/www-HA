@@ -29,14 +29,18 @@
               <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
           </svg>
           <span class="mt-2 text-base leading-normal">Upload Profile Picture</span>
-          <input type='file' class="hidden" id="fileInput" name="image" onchange="previewFile()" />
+          <input type='file' required class="hidden" id="fileInput" name="image" onchange="previewFile()" />
         </label>
+        <button id="uploadProfilePicButtton" class="btn mt-3" type="submit"><span>Upload</span></button>
       </div>
   </form>
    
   </div>
   <div class="w-full md:w-1/2 p-4">
-    <form action="http://localhost:9000/changeusername" method="post">
+    <form action={{"http://localhost:9000/profile/" + user.username}} method="post">
+      {% if errors.username %}
+      <p class="text-red-500 pb-5">{{errors.username}}</p>
+      {% endif %}
       <div class="input-group">
         <input
           id="username"
@@ -58,8 +62,7 @@
     <form action="http://localhost:9000/changedescription" method="post">
       <div class="input-group">
         <textarea id="description" required type="text" name="description"
-        autocomplete="off" class="input big-input" value="{{"Hi, I´m " +
-        user.name + "!"}}" cols="40" rows="5">{{user.description}}</textarea>
+        autocomplete="off" class="input big-input" cols="40" rows="5">{{user.description}}</textarea>
         <label for="description" class="user-label">Profiledescription</label>
       </div>
       <button
@@ -73,7 +76,7 @@
           <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4 mr-4">
             Change Password
           </button>
-      </form>
+        </form>
         <form action="http://localhost:9000/logout" method="post">
             <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-full mt-4">
               Log Out

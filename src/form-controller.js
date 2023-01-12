@@ -1,18 +1,19 @@
-import * as model from "./model.js";
+import * as readUserModel from "./model/readUserModel.js";
+import * as changeUserModel from "./model/changeUserModel.js";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-import * as path from "https://deno.land/std@0.171.0/path/mod.ts";
+
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 
 import generateJWT from "./utils/generateJWT.js";
 import validateImage from "./utils/validateImage.js";
-import generateFilename from "./utils/generateFilename.js";
+import uploadProfilePicture from "./utils/uploadProfilePicture.js";
 
 export const submitLogin = async (ctx) => {
   const formdata = await ctx.request.formData();
   const username = formdata.get("username");
   const password = formdata.get("password");
 
-  const userPw = await model.getUserPassword(ctx.db, username);
+  const userPw = await readUserModel.getUserPassword(ctx.db, username);
   const isPasswordValid = await bcrypt.compare(password, userPw);
 
   if (isPasswordValid) {
@@ -39,12 +40,12 @@ export const submitCreateAccount = async (ctx) => {
   const valPassword = formdata.get("valPassword");
 
   const isPasswordValid = password === valPassword;
-  const userExists = await model.userExists(ctx.db, username);
+  const userExists = await readUserModel.userExists(ctx.db, username);
 
   const errors = {};
 
   if (isPasswordValid && !userExists) {
-    model.createUser(ctx.db, username, password);
+    changeUserModel.createUser(ctx.db, username, password);
     ctx.redirect = new Response(null, {
       status: 302,
       headers: { Location: "/login" },
@@ -75,8 +76,19 @@ export const changeUsername = async (ctx) => {
   const formdata = await ctx.request.formData();
   const username = ctx.user;
   const newUsername = formdata.get("username");
+  const userExists = await readUserModel.getUser(ctx.db, newUsername);
 
-  model.changeUsername(ctx.db, username, newUsername);
+  if (userExists) {
+    ctx.response.body = ctx.nunjucks.render("profile.html", {
+      user: await readUserModel.getUser(ctx.db, username),
+      errors: { username: "Username already exists" },
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+    return ctx;
+  }
+
+  changeUserModel.changeUsername(ctx.db, username, newUsername);
   const jwt = await generateJWT(newUsername);
   ctx.response.headers["Set-Cookie"] = `jwt=${jwt}; HttpOnly; Path=/`;
   ctx.user = newUsername;
@@ -90,14 +102,14 @@ export const changeDescription = async (ctx) => {
   const username = ctx.user;
   const description = formdata.get("description");
 
-  model.changeDescription(ctx.db, username, description);
+  changeUserModel.changeDescription(ctx.db, username, description);
   ctx.response.status = 303;
   ctx.response.headers["Location"] = "/profile/" + username;
   return ctx;
 };
 
 export const submitChangePassword = async (ctx) => {
-  const userPw = await model.getUserPassword(ctx.db, ctx.user);
+  const userPw = await readUserModel.getUserPassword(ctx.db, ctx.user);
   const formData = await ctx.request.formData();
   const oldPassword = formData.get("oldPw");
   const newPassword = formData.get("newPw");
@@ -108,7 +120,7 @@ export const submitChangePassword = async (ctx) => {
   const isNotSamePassword = newPassword !== oldPassword;
 
   if (isPasswordValid && isPasswordMatch && isNotSamePassword) {
-    model.changePassword(ctx.db, ctx.user, newPassword);
+    changeUserModel.changePassword(ctx.db, ctx.user, newPassword);
     ctx.response.status = 303;
     ctx.response.headers["Location"] = "/profile/" + ctx.user;
   } else {
@@ -136,21 +148,12 @@ export const imageUpload = async (ctx) => {
   const error = validateImage(image);
 
   if (error) {
-    ctx.response.body = ctx.nunjucks.render("login.html", {
-      user: { username: ctx.user },
-      errors: error,
-    });
-    ctx.response.status = 200;
+    ctx.response.status = 303;
+    ctx.response.headers["Location"] = "/profile/" + username;
     ctx.response.headers["content-type"] = "text/html";
     return ctx;
   } else {
-    const filename = generateFilename(image);
-    model.imageUpload(ctx.db, username, filename);
-    const destFile = await Deno.open(
-      path.join(Deno.cwd(), "assets", filename),
-      { create: true, write: true, truncate: true }
-    );
-    await image.stream().pipeTo(destFile.writable);
+    await uploadProfilePicture(ctx, image);
     ctx.redirect = new Response(null, {
       status: 302,
       headers: { Location: "/profile/" + username },

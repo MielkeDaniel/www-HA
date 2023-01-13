@@ -7,7 +7,7 @@ export const getUser = async (db, username) => {
     username: user[0][0],
     accountType: user[0][2],
     description: user[0][3],
-    profilePicture: user[0][4],
+    profilePicture: user[0][4] || "images/standard-pp.png",
   };
   return user;
 };

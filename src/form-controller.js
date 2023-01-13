@@ -187,3 +187,15 @@ export const uploadNews = async (ctx) => {
   });
   return ctx;
 };
+
+export const comment = async (ctx, newsId) => {
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  const formdata = await ctx.request.formData();
+  const comment = formdata.get("comment");
+  await newsModel.comment(ctx, newsId, comment, user.profilePicture);
+  ctx.redirect = new Response(null, {
+    status: 302,
+    headers: { Location: "/news/" + newsId },
+  });
+  return ctx;
+};

@@ -114,6 +114,7 @@ export const createNews = async (ctx) => {
 export const newsSubPage = async (ctx, newsId) => {
   const user = await readUserModel.getUser(ctx.db, ctx.user);
   const news = await newsModel.getNewsById(ctx, newsId);
+  const comments = await newsModel.getComments(ctx, newsId);
   if (news === false || news === undefined) {
     ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
       errors: { news: "News-article not found!" },
@@ -125,9 +126,48 @@ export const newsSubPage = async (ctx, newsId) => {
     ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
       news,
       user,
+      comments,
     });
     ctx.response.status = 200;
     ctx.response.headers["content-type"] = "text/html";
   }
   return ctx;
+};
+
+export const upvoteComment = async (ctx, commentId) => {
+  const url = new URL(ctx.request.headers.get("referer"));
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  if (!user) {
+    ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
+      errors: { login: "You need to be logged in to upvote!" },
+      user,
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  } else {
+    await newsModel.upvoteComment(ctx, commentId);
+    ctx.redirect = new Response(null, {
+      status: 303,
+      headers: { Location: url.pathname },
+    });
+  }
+};
+
+export const downvoteComment = async (ctx, commentId) => {
+  const url = new URL(ctx.request.headers.get("referer"));
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  if (!user) {
+    ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
+      errors: { login: "You need to be logged in to downvote!" },
+      user,
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  } else {
+    await newsModel.downvoteComment(ctx, commentId);
+    ctx.redirect = new Response(null, {
+      status: 303,
+      headers: { Location: url.pathname },
+    });
+  }
 };

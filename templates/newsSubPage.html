@@ -28,19 +28,71 @@
   <!-- Comment box -->
   <div class="mt-10">
     <form action="http://localhost:9000/comment/{{news.id}}" method="post">
-      <div class="input-group mb-10">
-        <textarea
-          class="textarea w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
-          name="comment"
-          required
-          placeholder="Comment"
-        ></textarea>
+      <div class="input-group mb-10 w-1/2">
+        <div class="flex items-center">
+          <img
+            src="/{{user.profilePicture}}"
+            alt="Profile picture"
+            class="max-h-16 rounded-full mr-4"
+          />
+          <textarea
+            class="textarea w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
+            name="comment"
+            required
+            placeholder="Comment"
+          ></textarea>
+        </div>
+        <div class="flex justify-end mt-8">
+          <button class="btn" type="submit"><span>Comment</span></button>
+        </div>
       </div>
-      <button class="btn" type="submit"><span>Comment</span></button>
     </form>
   </div>
   <!-- Comment box END -->
 
-  {% endif %}
+  <!-- Comments -->
+  <div class="mt-10">
+    {% for comment in comments %}
+    <div class="flex items-center py-10 border-t w-1/2">
+      <img
+        src="/{{comment.profilePicture}}"
+        alt="Profile picture"
+        class="max-h-16 rounded-full mr-4"
+      />
+      <div class="flex flex-col">
+        <a href="/profile/{{comment.author}}" class="text-xl text-yellow-200"
+          >{{comment.author}}</a
+        >
+        <p class="text-gray-400 text-xl">{{comment.comment}}</p>
+        <div class="flex mt-1">
+          <div class="flex mr-5">
+            <form action="/upvote/{{comment.id}}">
+              <button type="submit">
+                <img
+                  src="/images/like.png"
+                  alt="likebutton"
+                  class="w-4 h-4 mr-2 mt-1"
+                />
+              </button>
+            </form>
+            <p class="text-gray-400 text-xl">{{comment.upvotes}}</p>
+          </div>
+          <div class="flex">
+            <form action="/downvote/{{comment.id}}">
+              <button type="sbumit">
+                <img
+                  src="/images/dislike.png"
+                  alt="dislikebutton"
+                  class="w-4 h-4 mr-2 mt-1"
+                />
+              </button>
+            </form>
+            <p class="text-gray-400 text-xl">{{comment.downvotes}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %} {% endif %}
+  </div>
 </div>
 {%endblock%}

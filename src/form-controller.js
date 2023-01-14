@@ -199,3 +199,20 @@ export const comment = async (ctx, newsId) => {
   });
   return ctx;
 };
+
+export const submitEditNews = async (ctx, newsId) => {
+  const formdata = await ctx.request.formData();
+  const title = formdata.get("title");
+  const subtitle = formdata.get("subtitle");
+  const image = formdata.get("image");
+  const article = formdata.get("article");
+
+  const imageName = await uploadArticleImage(image);
+
+  await newsModel.editNews(ctx, newsId, title, subtitle, article, imageName);
+  ctx.redirect = new Response(null, {
+    status: 302,
+    headers: { Location: "/news/" + newsId },
+  });
+  return ctx;
+};

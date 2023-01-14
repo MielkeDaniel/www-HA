@@ -2,7 +2,9 @@ import * as readUserModel from "./model/readUserModel.js";
 import * as newsModel from "./model/newsModel.js";
 
 export const error404 = (ctx) => {
-  ctx.response.body = ctx.nunjucks.render("error404.html", {});
+  ctx.response.body = ctx.nunjucks.render("error404.html", {
+    user: { username: ctx.user },
+  });
   ctx.response.status = 404;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
@@ -170,4 +172,39 @@ export const downvoteComment = async (ctx, commentId) => {
       headers: { Location: url.pathname },
     });
   }
+};
+
+export const deletecomment = async (ctx, commentId) => {
+  const url = new URL(ctx.request.headers.get("referer"));
+
+  await newsModel.deleteComment(ctx, commentId);
+  ctx.redirect = new Response(null, {
+    status: 303,
+    headers: { Location: url.pathname },
+  });
+};
+
+export const editNews = async (ctx, newsId) => {
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  const news = await newsModel.getNewsById(ctx, newsId);
+  const isAdmin = user && user.accountType === "admin";
+  if (!isAdmin || news === false) {
+    ctx.response.body = ctx.nunjucks.render("editNews.html", {
+      user,
+      errors: {
+        admin:
+          "The news either does not exist or your account does not have the priviledge to edit this articles.",
+      },
+    });
+    ctx.response.status = 403;
+    ctx.response.headers["content-type"] = "text/html";
+  } else {
+    ctx.response.body = ctx.nunjucks.render("editNews.html", {
+      user,
+      news,
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  }
+  return ctx;
 };

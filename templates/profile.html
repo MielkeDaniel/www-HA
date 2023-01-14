@@ -2,21 +2,12 @@
 <h1 class="text-gray-400 text-5xl mt-44 mb-20 text-center">Profile by {{user.username}}</h1>
 <div class="container mx-auto flex flex-wrap items-center mb-60">
   <div class="w-full md:w-1/2 p-4 text-center flex flex-col justify-center items-center mt-6">
-    {% if user.profilePicture %}
     <img
       class="w-64 mx-auto rounded-xl border border-yellow-300"
       src={{"/" + user.profilePicture}}
       id="imagePreview"
       alt="Profile Picture"
     />
-    {% else %}
-    <img
-      class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
-      src="/images/standard-pp.png"
-      id="imagePreview"
-      alt="Profile Picture"
-    />
-    {% endif %}
     
     {% if errors.image %}
     <p class="text-red-500 pb-5">{{errors.image}}</p>

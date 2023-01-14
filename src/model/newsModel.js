@@ -1,3 +1,5 @@
+import * as path from "https://deno.land/std@0.171.0/path/mod.ts";
+
 export const createNews = async (
   ctx,
   title,
@@ -46,7 +48,6 @@ export const getNewsById = async (ctx, id) => {
 
 export const comment = async (ctx, newsId, comment, profilePicture) => {
   const date = new Date();
-  console.log(profilePicture);
   await ctx.db.query(
     `INSERT INTO comments (author, article_id, comment, upvotes, downvotes, date, profilepicture) VALUES (?, ?, ?, ?, ?, ?, ?);`,
     [ctx.user, newsId, comment, 0, 0, date.toLocaleDateString(), profilePicture]
@@ -59,18 +60,20 @@ export const getComments = async (ctx, newsId) => {
     `SELECT * FROM comments WHERE article_id = ?;`,
     [newsId]
   );
-  const sortedComments = comments.map((comment) => {
-    return {
-      id: comment[0],
-      author: comment[1],
-      article_id: comment[2],
-      comment: comment[3],
-      upvotes: comment[4],
-      downvotes: comment[5],
-      date: comment[6],
-      profilePicture: comment[7],
-    };
-  });
+  const sortedComments = comments
+    .map((comment) => {
+      return {
+        id: comment[0],
+        author: comment[1],
+        article_id: comment[2],
+        comment: comment[3],
+        upvotes: comment[4],
+        downvotes: comment[5],
+        date: comment[6],
+        profilePicture: comment[7],
+      };
+    })
+    .reverse();
   return sortedComments;
 };
 
@@ -152,6 +155,38 @@ export const downvoteComment = async (ctx, commentId) => {
   await ctx.db.query(
     `UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?;`,
     [commentId]
+  );
+  return true;
+};
+
+export const deleteComment = async (ctx, commentId) => {
+  await ctx.db.query(`DELETE FROM votes WHERE comment_id = ?;`, [commentId]);
+  await ctx.db.query(`DELETE FROM comments WHERE id = ?;`, [commentId]);
+  return true;
+};
+
+export const editNews = async (
+  ctx,
+  newsId,
+  title,
+  subtitle,
+  article,
+  imageName
+) => {
+  let newImageName;
+  const oldImageName = ctx.db.query(`SELECT image FROM news WHERE id = ?;`, [
+    newsId,
+  ])[0][0];
+  if (imageName) {
+    oldImageName &&
+      (await Deno.remove(path.join(Deno.cwd(), "assets", oldImageName)));
+    newImageName = imageName;
+  } else {
+    newImageName = oldImageName;
+  }
+  await ctx.db.query(
+    `UPDATE news SET title = ?, subtitle = ?, article = ?, image = ? WHERE id = ?;`,
+    [title, subtitle, article, newImageName, newsId]
   );
   return true;
 };

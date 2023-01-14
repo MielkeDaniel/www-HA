@@ -76,6 +76,21 @@ const router = async (ctx) => {
     return await controller.downvoteComment(ctx, commentId);
   }
 
+  // /deletecomment/id
+  if (url.pathname.match(/\/deletecomment\/[0-9]+$/)) {
+    const commentId = url.pathname.split("/")[2];
+    return await controller.deletecomment(ctx, commentId);
+  }
+
+  // /editnews/id
+  if (url.pathname.match(/\/editnews\/[0-9]+$/)) {
+    const method = ctx.request.method;
+    const newsId = url.pathname.split("/")[2];
+    if (method == "GET") return await controller.editNews(ctx, newsId);
+    if (method == "POST")
+      return await formController.submitEditNews(ctx, newsId);
+  }
+
   // 404
   return await controller.error404(ctx);
 };

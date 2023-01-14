@@ -1,26 +1,22 @@
 {% extends 'layout.html' %} {%block content%}
-<div class="section-padding">
-  <h1 class="mt-40 text-5xl text-yellow-200 mb-20">ALL NEWS ON THE ICP</h1>
-
+<div class="section-padding mt-36">
+  <h1 class="text-2xl lg:text-4xl text-yellow-200 mb-10">ALL NEWS ON THE ICP</h1>
   {% for news in news %}
-  <a
-    href="/news/{{news.id}}"
-    class="flex justify-between my-14 items-center border-2 py-10 px-32 rounded-2xl border-yellow-200 duration-200 hover:bg-gray-800 mr-80"
-  >
-    <div class="w-1/2">
-      <h1 class="text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
-      <h2 class="text-2xl text-gray-300 mb-5">{{news.subtitle}}</h2>
-      <div class="btn mt-5"><span>Read More</span></div>
-    </div>
-    <div>
-      <img
-        class="max-h-40 mx-auto rounded-xl bg-white p-1"
+  <div class="border-2 border-yellow-200 p-5 lg:p-10 rounded-lg duration-200 hover:bg-gray-800 my-20 lg:mr-30 xl:mr-80">
+    <a href="/news/{{news.id}}" class="flex justify-between">
+      <div>
+          <h1 class="text-yellow-200 text-xl lg:text-2xl">{{news.title}}</h1>
+          <h2 class="text-gray-300 text-lg lg:text-xl py-5">{{news.subtitle}}</h2>
+          <div class="btn mt-3"><span>View Article</span></div>
+      </div>
+        <img
         id="imagePreview"
         alt="Article Preview"
         src="/{{news.image}}"
+        class="hidden max-h-40 md:block ml-10"
       />
-    </div>
-  </a>
+    </a>
+  </div>
   {% endfor %} {% if user.accountType === "admin" %}
   <div class="mt-10">
     <form action="http://localhost:9000/createnews" method="get">

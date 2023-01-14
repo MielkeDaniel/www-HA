@@ -4,7 +4,7 @@
   <div class="w-full md:w-1/2 p-4 text-center flex flex-col justify-center items-center mt-6">
     {% if user.profilePicture %}
     <img
-      class="w-64 mx-auto rounded-xl border-4 border-yellow-300 border-4"
+      class="w-64 mx-auto rounded-xl border border-yellow-300"
       src={{"/" + user.profilePicture}}
       id="imagePreview"
       alt="Profile Picture"
@@ -36,7 +36,7 @@
   </form>
    
   </div>
-  <div class="w-full md:w-1/2 p-4">
+  <div class="w-full md:w-1/2 p-4 flex lg:block flex-col items-center justify-center">
     <form action={{"http://localhost:9000/profile/" + user.username}} method="post">
       {% if errors.username %}
       <p class="text-red-500 pb-5">{{errors.username}}</p>

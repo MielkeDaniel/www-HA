@@ -46,6 +46,7 @@ export const getNewsById = async (ctx, id) => {
 
 export const comment = async (ctx, newsId, comment, profilePicture) => {
   const date = new Date();
+  console.log(profilePicture);
   await ctx.db.query(
     `INSERT INTO comments (author, article_id, comment, upvotes, downvotes, date, profilepicture) VALUES (?, ?, ?, ?, ?, ?, ?);`,
     [ctx.user, newsId, comment, 0, 0, date.toLocaleDateString(), profilePicture]

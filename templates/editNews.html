@@ -15,6 +15,7 @@
       <div>
         <div class="input-group">
           <input
+          id="edit-title"
             required
             type="text"
             name="title"
@@ -22,10 +23,11 @@
             class="input"
             value="{{news.title}}"
           />
-          <label for="username" class="user-label">Title</label>
+          <label for="edit-title" class="user-label">Title</label>
         </div>
         <div class="input-group mt-5">
           <input
+            id="edit-subtitle"
             required
             type="text"
             name="subtitle"
@@ -33,13 +35,12 @@
             class="input"
             value="{{news.subtitle}}"
           />
-          <label for="subtitle" class="user-label">Subtitle</label>
+          <label for="edit-subtitle" class="user-label">Subtitle</label>
         </div>
         <div class="input-group mt-5">
           <textarea
             id="article"
             required
-            type="text"
             name="article"
             autocomplete="off"
             class="input big-input"

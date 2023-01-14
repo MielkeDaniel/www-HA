@@ -4,7 +4,7 @@ import { DB } from "https://deno.land/x/sqlite@v3.7.0/mod.ts";
 
 import userMiddleware from "./utils/userMiddleware.js";
 import serveStaticFile from "./utils/serveStaticFile.js";
-import router from "./router.js";
+import router from "./router/index.js";
 
 import * as controller from "./controller.js";
 

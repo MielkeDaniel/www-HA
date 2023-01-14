@@ -6,7 +6,7 @@ import * as readUserModel from "../model/readUserModel.js";
 const uploadProfilePicture = async (ctx, image) => {
   // delete old porfilepicture from the server
   const user = await readUserModel.getUser(ctx.db, ctx.user);
-  if (user.profilePicture) {
+  if (user.profilePicture && user.profilepicture !== "images/standard-pp.png") {
     try {
       await Deno.remove(path.join(Deno.cwd(), "assets", user.profilePicture));
     } catch {

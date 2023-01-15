@@ -44,9 +44,7 @@
               class="max-h-16 rounded-full mr-4 hidden lg:block"
             />
             {% endif %}
-            <label for="commentbox" form="postcommentform" class="hidden-label"
-              >hello</label
-            >
+            <label for="commentbox" class="hidden-label">hello</label>
             <textarea
               class="w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
               name="comment"
@@ -94,7 +92,7 @@
             </div>
             <div class="flex">
               <form action="/downvote/{{comment.id}}" method="post">
-                <button type="sbumit">
+                <button type="submit">
                   <img
                     src="/images/dislike.png"
                     alt="dislikebutton"

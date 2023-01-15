@@ -29,9 +29,8 @@ export const handleRequest = async (request) => {
   ctx = await serveStaticFile(base, ctx);
 
   ctx = await userMiddleware(ctx);
-  //await formMiddleware(ctx);
 
-  let result = await router(ctx);
+  let result = await router.handle(ctx);
 
   // Handle redirect
   if (ctx.redirect) {

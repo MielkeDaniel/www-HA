@@ -1,3 +1,10 @@
+/* fonts */
+@font-face {
+  font-family: Titillium Web;
+  src: url("../fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+  font-weight: Regular;
+}
+
 /* -------------------------------- PRESETCSS ------------------------------------------------------------------------------------------------ */
 
 /**

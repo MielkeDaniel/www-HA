@@ -9,8 +9,9 @@
     <h1 class="mt-32 text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
     <div class="lg:flex">
       <div class="lg:w-1/2">
-        <h2 class="text-xl text-gray-300 mb-10">{{news.subtitle}}</h2>
+        <h2 class="text-xl text-gray-300">{{news.subtitle}}</h2>
         <p class="text-gray-400 text-lg">{{news.article}}</p>
+        <p class="text-xl text-gray-500 my-5">written by {{news.author}}</p>
       </div>
       <img
         class="max-h-80 rounded-xl border border-yellow-200 mt-16 lg:mx-auto"
@@ -26,11 +27,19 @@
       <form action="http://localhost:9000/comment/{{news.id}}" method="post">
         <div class="mb-10 w-full">
           <div class="flex items-center w-full">
+            {% if user.profilePicture %}
             <img
               src="/{{user.profilePicture}}"
               alt="Profile picture"
               class="max-h-16 rounded-full mr-4 hidden lg:block"
             />
+            {% else %}
+            <img
+              src="/images/standard-pp.png"
+              alt="Profile picture"
+              class="max-h-16 rounded-full mr-4 hidden lg:block"
+            />
+            {% endif %}
             <textarea
               class="w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
               name="comment"
@@ -67,7 +76,7 @@
                   <img
                     src="/images/like.png"
                     alt="likebutton"
-                    class="w-4 h-4 mr-2 mt-1"
+                    class="w-6 h-6 mr-2 duration-200 hover:bg-yellow-600 p-1"
                   />
                 </button>
               </form>
@@ -79,7 +88,7 @@
                   <img
                     src="/images/dislike.png"
                     alt="dislikebutton"
-                    class="w-4 h-4 mr-2 mt-1"
+                    class="w-6 h-6 mr-2 duration-200 hover:bg-yellow-600 p-1 mt-1"
                   />
                 </button>
               </form>

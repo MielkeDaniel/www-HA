@@ -38,6 +38,8 @@
     <h2 class="cf-form-group-heading">ENTER YOUR PASSWORD</h2>
     {% if errors.password %}
     <p class="text-red-500 pb-5">{{errors.password}}</p>
+    {% endif %} {% if errors.passwordLength %}
+    <p class="text-red-500 pb-5">{{errors.passwordLength}}</p>
     {% endif %}
     <div class="cf-pers-group">
       <div class="input-group">

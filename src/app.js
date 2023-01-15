@@ -6,7 +6,7 @@ import userMiddleware from "./utils/userMiddleware.js";
 import serveStaticFile from "./utils/serveStaticFile.js";
 import routesHandler from "./router/index.js";
 
-import * as controller from "./controller.js";
+import * as pagesController from "./controller/pagesController.js";
 
 // DEV only: noCache:true
 nunjucks.configure("templates", { autoescape: true, noCache: true });
@@ -25,9 +25,9 @@ export const handleRequest = async (request) => {
       headers: {},
     },
   };
+
   const base = "assets";
   ctx = await serveStaticFile(base, ctx);
-
   ctx = await userMiddleware(ctx);
 
   let result = await routesHandler(ctx);
@@ -40,7 +40,7 @@ export const handleRequest = async (request) => {
   // Fallback
   result.response.status = result.response.status ?? 404;
   if (!result.response.body && result.response.status == 404) {
-    result = await controller.error404(result);
+    result = await pagesController.error404(result);
   }
 
   return new Response(result.response.body, {

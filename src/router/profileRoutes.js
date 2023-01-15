@@ -27,7 +27,7 @@ router.post(
   async (ctx) => await profileController.submitChangePassword(ctx)
 );
 
-router.get(/^\/logout$/, async (ctx) => await profileController.logout(ctx));
+router.post(/^\/logout$/, async (ctx) => await profileController.logout(ctx));
 
 router.post(
   /^\/changeusername$/,

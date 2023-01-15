@@ -53,11 +53,17 @@ export const submitChangePassword = async (ctx) => {
   const newPassword = formData.get("newPw");
   const newPassword2 = formData.get("newValPw");
 
+  const isPasswordLengthValid = newPassword.length >= 4;
   const isPasswordValid = await bcrypt.compare(oldPassword, userPw);
   const isPasswordMatch = newPassword === newPassword2;
   const isNotSamePassword = newPassword !== oldPassword;
 
-  if (isPasswordValid && isPasswordMatch && isNotSamePassword) {
+  if (
+    isPasswordValid &&
+    isPasswordMatch &&
+    isNotSamePassword &&
+    isPasswordLengthValid
+  ) {
     changeUserModel.changePassword(ctx.db, ctx.user, newPassword);
     ctx.response.status = 303;
     ctx.response.headers["Location"] = "/profile/" + ctx.user;
@@ -71,6 +77,7 @@ export const submitChangePassword = async (ctx) => {
         samePassword: !isNotSamePassword
           ? "New password cannot be the same"
           : "",
+        passwordLength: !isPasswordLengthValid ? "Password too short" : "",
       },
     });
     ctx.response.status = 200;
@@ -111,11 +118,12 @@ export const submitCreateAccount = async (ctx) => {
   const valPassword = formdata.get("valPassword");
 
   const isPasswordValid = password === valPassword;
+  const isPasswordLengthValid = password.length >= 4;
   const userExists = await readUserModel.userExists(ctx.db, username);
 
   const errors = {};
 
-  if (isPasswordValid && !userExists) {
+  if (isPasswordValid && !userExists && isPasswordLengthValid) {
     changeUserModel.createUser(ctx.db, username, password);
     ctx.redirect = new Response(null, {
       status: 302,
@@ -125,6 +133,7 @@ export const submitCreateAccount = async (ctx) => {
   } else {
     !isPasswordValid && (errors.password = "Passwords do not match");
     userExists && (errors.username = "Username already exists");
+    !isPasswordLengthValid && (errors.passwordLength = "Password too short");
     ctx.response.body = ctx.nunjucks.render("createAccount.html", {
       form: { username: username, password: password },
       errors: errors,

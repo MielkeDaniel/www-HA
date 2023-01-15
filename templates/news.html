@@ -9,7 +9,9 @@
   >
     <div class="flex justify-between">
       <div>
-        <h1 class="text-yellow-200 text-xl lg:text-2xl">{{news.title}}</h1>
+        <a href="/news/{{news.id}}" class="text-yellow-200 text-xl lg:text-2xl"
+          >{{news.title}}</a
+        >
         <h2 class="text-gray-300 text-lg lg:text-xl py-5">{{news.subtitle}}</h2>
         <div class="flex">
           <a href="/news/{{news.id}}" class="btn mt-3">

@@ -1,8 +1,16 @@
 /* fonts */
 @font-face {
-  font-family: Titillium Web;
-  src: url("../fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+  font-family: "TitilliumWeb";
+  src: url("../fonts/TitilliumWeb-Regular.ttf");
   font-weight: Regular;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TitilliumWeb";
+  src: url("../fonts/TitilliumWeb-SemiBold.ttf");
+  font-weight: Bold;
+  font-style: normal;
 }
 
 /* -------------------------------- PRESETCSS ------------------------------------------------------------------------------------------------ */
@@ -13,6 +21,7 @@
  */
 
 html {
+  font-family: "TitilliumWeb", sans-serif;
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
@@ -67,7 +76,7 @@ hr {
        */
 
 pre {
-  font-family: monospace, monospace; /* 1 */
+  font-family: "Titillium Web"; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -110,7 +119,7 @@ strong {
 code,
 kbd,
 samp {
-  font-family: monospace, monospace; /* 1 */
+  font-family: "Titillium Web"; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -364,11 +373,10 @@ a {
 }
 
 body {
+  font-family: inherit;
   box-sizing: border-box;
   color: rgb(234, 234, 234);
   background: #222222;
-  font-family: "Domine", serif;
-  font-family: "Titillium Web", sans-serif;
 }
 
 img {
@@ -774,13 +782,14 @@ img {
 }
 
 .card-body {
-  padding: 1.5em;
+  padding: 0.8em;
   border-top: 1px solid rgb(125, 125, 125);
 }
 
 .card-title {
   font-size: 1.1rem;
   color: black;
+  font-weight: bold;
 }
 
 .card img {
@@ -827,10 +836,12 @@ img {
   margin-bottom: 0.5rem;
   color: rgb(94, 94, 94);
   padding-top: 0.1rem;
+  line-height: 1.2em;
 }
 .card-description {
   display: block;
   height: 0;
+  line-height: 1em;
   font-size: 1.1rem;
   color: #3a3a3a;
   font-weight: 500;

@@ -25,4 +25,7 @@ router.get(
   async (ctx) => await pagesController.createAccount(ctx)
 );
 
+// colophon
+router.get(/^\/colophon$/, async (ctx) => await pagesController.colophon(ctx));
+
 export default router;

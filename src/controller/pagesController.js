@@ -97,3 +97,12 @@ export const error404 = (ctx) => {
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
+
+export const colophon = (ctx) => {
+  ctx.response.body = ctx.nunjucks.render("colophon.html", {
+    user: { username: ctx.user },
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};

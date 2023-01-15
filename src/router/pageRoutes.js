@@ -28,4 +28,10 @@ router.get(
 // colophon
 router.get(/^\/colophon$/, async (ctx) => await pagesController.colophon(ctx));
 
+// imprint
+router.get(/^\/imprint$/, async (ctx) => await pagesController.imprint(ctx));
+
+// privacy
+router.get(/^\/privacy$/, async (ctx) => await pagesController.privacy(ctx));
+
 export default router;

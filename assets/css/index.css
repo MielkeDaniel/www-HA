@@ -985,11 +985,15 @@ img {
   }
 
   .section-padding {
-    padding-left: 18rem;
-    padding-right: 18rem;
+    padding-left: 15rem;
+    padding-right: 15rem;
     margin-left: auto;
     margin-right: auto;
     padding-top: 2rem;
+  }
+
+  .hidden-label {
+    font-size: 0;
   }
 
   .section-heading {

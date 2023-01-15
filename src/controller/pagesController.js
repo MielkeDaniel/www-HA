@@ -1,11 +1,12 @@
 import * as readUserModel from "../model/readUserModel.js";
 import * as newsModel from "../model/newsModel.js";
+import * as commentsModel from "../model/commentsModel.js";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 
 export const newsSubPage = async (ctx, newsId) => {
   const user = await readUserModel.getUser(ctx.db, ctx.user);
   const news = await newsModel.getNewsById(ctx, newsId);
-  const comments = await newsModel.getComments(ctx, newsId);
+  const comments = await commentsModel.getComments(ctx, newsId);
   if (news === false || news === undefined) {
     ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
       errors: { news: "News-article not found!" },
@@ -100,6 +101,24 @@ export const error404 = (ctx) => {
 
 export const colophon = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("colophon.html", {
+    user: { username: ctx.user },
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};
+
+export const imprint = (ctx) => {
+  ctx.response.body = ctx.nunjucks.render("imprint.html", {
+    user: { username: ctx.user },
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};
+
+export const privacy = (ctx) => {
+  ctx.response.body = ctx.nunjucks.render("privacy.html", {
     user: { username: ctx.user },
   });
   ctx.response.status = 200;

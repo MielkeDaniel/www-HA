@@ -15,7 +15,7 @@
       <div>
         <div class="input-group">
           <input
-          id="edit-title"
+            id="edit-title"
             required
             type="text"
             name="title"
@@ -46,7 +46,9 @@
             class="input big-input"
             cols="40"
             rows="15"
-          >{{news.article}}</textarea>
+          >
+{{news.article}}</textarea
+          >
           <label for="article" class="user-label">Article</label>
         </div>
         <button class="btn mt-10" type="submit" form="updatenewsform">
@@ -75,19 +77,23 @@
               />
             </svg>
             <span class="mt-2 text-base leading-normal"
-              >Update article image</span>
+              >Update article image</span
+            >
             <input type="file" class="hidden" id="fileInput" name="image" />
           </label>
         </div>
       </div>
     </div>
   </form>
-  <form  
-  action="http://localhost:9000/deletenews/{{news.id}}"
-  enctype="multipart/form-data"
-  method="post"
-  id="deletenewsform">
-    <button class="mt-3 ml-1 text-gray-400 duration-200 hover:text-yellow-200" type="submit" form="deletenewsform">
+  <form
+    action="http://localhost:9000/deletenews/{{news.id}}"
+    enctype="multipart/form-data"
+    method="post"
+  >
+    <button
+      class="mt-3 ml-1 text-gray-400 duration-200 hover:text-yellow-200"
+      type="submit"
+    >
       Delete article
     </button>
   </form>

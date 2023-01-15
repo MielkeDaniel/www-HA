@@ -160,12 +160,19 @@ export const downvoteComment = async (ctx, commentId) => {
 };
 
 export const deleteComment = async (ctx, commentId) => {
-  await ctx.db.query(`DELETE FROM votes WHERE comment_id = ?;`, [commentId]);
   await ctx.db.query(`DELETE FROM comments WHERE id = ?;`, [commentId]);
   return true;
 };
 
-export const deleteNewsArticle = async (ctx, newsId) => {};
+export const deleteNewsArticle = async (ctx, newsId) => {
+  const image = await ctx.db.query(`SELECT image FROM news WHERE id = ?;`, [
+    newsId,
+  ])[0][0];
+  image && (await Deno.remove(path.join(Deno.cwd(), "assets", image)));
+
+  await ctx.db.query(`DELETE FROM news WHERE id = ?;`, [newsId]);
+  return true;
+};
 
 export const editNews = async (
   ctx,

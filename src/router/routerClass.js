@@ -21,7 +21,11 @@ class Router {
   }
 
   async handle(ctx) {
-    const { method, url } = ctx.request;
+    let { method, url } = ctx.request;
+    // remove ? from get request
+    if (url.includes("?")) {
+      url = url.split("?")[0];
+    }
     const path = new URL(url).pathname;
     let match;
     for (const route of this.routes[method.toLowerCase()]) {

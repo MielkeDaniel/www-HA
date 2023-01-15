@@ -1,102 +1,103 @@
-{% extends 'layout.html' %} {%block content%}
-{% if errors.news %}
+{% extends 'layout.html' %} {%block content%} {% if errors.news %}
 <div class="h-screen">
   <h1 class="pt-80 text-center text-gray-400">{{errors.news}}</h1>
 </div>
 {% else %}
 <div class="px-10 lg:px-20">
   <div class="">
-<!-- Article -->
-  <h1 class="mt-32 text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
-  <div class="lg:flex">
+    <!-- Article -->
+    <h1 class="mt-32 text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
+    <div class="lg:flex">
       <div class="lg:w-1/2">
         <h2 class="text-xl text-gray-300 mb-10">{{news.subtitle}}</h2>
         <p class="text-gray-400 text-lg">{{news.article}}</p>
       </div>
-        <img
-          class="max-h-80 rounded-xl border border-yellow-200 mt-16 lg:mx-auto"
-          id="imagePreview"
-          alt="Article Preview"
-          src="/{{news.image}}"
-        />
-  </div>
-  <!-- Article END -->
-
-  <!-- Comment box -->
-  <div class="mt-10 w-full lg:w-1/2">
-    <form action="http://localhost:9000/comment/{{news.id}}" method="post">
-      <div class="mb-10 w-full">
-        <div class="flex items-center w-full">
-          <img
-            src="/{{user.profilePicture}}"
-            alt="Profile picture"
-            class="max-h-16 rounded-full mr-4 hidden lg:block"
-          />
-          <textarea
-            class="w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
-            name="comment"
-            required
-            placeholder="Comment"
-          ></textarea>
-        </div>
-        <div class="flex justify-end mt-8">
-          <button class="btn" type="submit"><span>Comment</span></button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <!-- Comment box END -->
-
-  <!-- Comments -->
-  <div class="mt-10 w-full lg:w-1/2">
-    {% for comment in comments %}
-    <div class="flex items-center py-10 border-t w-full">
       <img
-        src="/{{comment.profilePicture}}"
-        alt="Profile picture"
-        class="w-16 rounded-full mr-4 hidden md:block"
+        class="max-h-80 rounded-xl border border-yellow-200 mt-16 lg:mx-auto"
+        id="imagePreview"
+        alt="Article Preview"
+        src="/{{news.image}}"
       />
-      <div class="flex flex-col">
-        <a href="/profile/{{comment.author}}" class="text-xl text-yellow-200"
-          >{{comment.author}}</a
-        >
-        <p class="text-gray-400 text-xl">{{comment.comment}}</p>
-        <div class="flex mt-1">
-          <div class="flex mr-5">
-            <form action="/upvote/{{comment.id}}">
-              <button type="submit">
-                <img
-                  src="/images/like.png"
-                  alt="likebutton"
-                  class="w-4 h-4 mr-2 mt-1"
-                />
+    </div>
+    <!-- Article END -->
+
+    <!-- Comment box -->
+    <div class="mt-10 w-full lg:w-1/2">
+      <form action="http://localhost:9000/comment/{{news.id}}" method="post">
+        <div class="mb-10 w-full">
+          <div class="flex items-center w-full">
+            <img
+              src="/{{user.profilePicture}}"
+              alt="Profile picture"
+              class="max-h-16 rounded-full mr-4 hidden lg:block"
+            />
+            <textarea
+              class="w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
+              name="comment"
+              required
+              placeholder="Comment"
+            ></textarea>
+          </div>
+          <div class="flex justify-end mt-8">
+            <button class="btn" type="submit"><span>Comment</span></button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- Comment box END -->
+
+    <!-- Comments -->
+    <div class="mt-10 w-full lg:w-1/2">
+      {% for comment in comments %}
+      <div class="flex items-center py-10 border-t w-full">
+        <img
+          src="/{{comment.profilePicture}}"
+          alt="Profile picture"
+          class="w-16 rounded-full mr-4 hidden md:block"
+        />
+        <div class="flex flex-col">
+          <a href="/profile/{{comment.author}}" class="text-xl text-yellow-200"
+            >{{comment.author}}</a
+          >
+          <p class="text-gray-400 text-xl">{{comment.comment}}</p>
+          <div class="flex mt-1">
+            <div class="flex mr-5">
+              <form action="/upvote/{{comment.id}}" method="post">
+                <button type="submit">
+                  <img
+                    src="/images/like.png"
+                    alt="likebutton"
+                    class="w-4 h-4 mr-2 mt-1"
+                  />
+                </button>
+              </form>
+              <p class="text-gray-400 text-xl">{{comment.upvotes}}</p>
+            </div>
+            <div class="flex">
+              <form action="/downvote/{{comment.id}}" method="post">
+                <button type="sbumit">
+                  <img
+                    src="/images/dislike.png"
+                    alt="dislikebutton"
+                    class="w-4 h-4 mr-2 mt-1"
+                  />
+                </button>
+              </form>
+              <p class="text-gray-400 text-xl">{{comment.downvotes}}</p>
+            </div>
+            {% if user.username == comment.author %}
+            <form action="/deletecomment/{{comment.id}}" method="post">
+              <button type="submit" class="text-gray-400 ml-3 pt-0.5">
+                delete
               </button>
             </form>
-            <p class="text-gray-400 text-xl">{{comment.upvotes}}</p>
+            {% endif %}
           </div>
-          <div class="flex">
-            <form action="/downvote/{{comment.id}}">
-              <button type="sbumit">
-                <img
-                  src="/images/dislike.png"
-                  alt="dislikebutton"
-                  class="w-4 h-4 mr-2 mt-1"
-                />
-              </button>
-            </form>
-            <p class="text-gray-400 text-xl">{{comment.downvotes}}</p>
-          </div>
-          {% if user.username == comment.author %}
-          <form action="/deletecomment/{{comment.id}}">
-            <button type="submit" class="text-gray-400 ml-3 pt-0.5">delete</button>
-          </form>
-          {% endif %}
         </div>
       </div>
+      {% endfor %} {% endif %}
+      <!-- Comments END -->
     </div>
-    {% endfor %} {% endif %}
-    <!-- Comments END -->
-  </div>
   </div>
 </div>
 {%endblock%}

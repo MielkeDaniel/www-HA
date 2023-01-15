@@ -10,7 +10,7 @@ const uploadProfilePicture = async (ctx, image) => {
     try {
       await Deno.remove(path.join(Deno.cwd(), "assets", user.profilePicture));
     } catch {
-      console.log("no such image");
+      console.log("no image to remove");
     }
   }
 

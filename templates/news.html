@@ -1,38 +1,44 @@
 {% extends 'layout.html' %} {%block content%}
 <div class="mt-36 mx-10 lg:mx-30 my-10">
-  <h1 class="text-2xl lg:text-4xl text-yellow-200 mb-10">ALL NEWS ON THE ICP</h1>
+  <h1 class="text-2xl lg:text-4xl text-yellow-200 mb-10">
+    ALL NEWS ON THE ICP
+  </h1>
   {% for news in news %}
-  <div class="border-2 border-yellow-200 p-5 lg:p-10 rounded-lg duration-200 hover:bg-gray-800 my-20 xl:mr-96">
-    <a href="/news/{{news.id}}" class="flex justify-between">
+  <div
+    class="border-2 border-yellow-200 p-5 lg:p-10 rounded-lg duration-200 hover:bg-gray-800 my-20 xl:mr-96"
+  >
+    <div class="flex justify-between">
       <div>
-          <h1 class="text-yellow-200 text-xl lg:text-2xl">{{news.title}}</h1>
-          <h2 class="text-gray-300 text-lg lg:text-xl py-5">{{news.subtitle}}</h2>
-          <div class="flex">
-            <div class="btn mt-3">
-              <span>View Article</span>
-            </div>
-            {% if user.accountType === "admin" %}
-            <form action="http://localhost:9000/editnews/{{news.id}}" method="get">
-              <button class="btn mt-3 ml-5" type="submit">
-                <span>edit</span>
-              </button>
-            </form>
-            {% endif %}
-          </div>
+        <h1 class="text-yellow-200 text-xl lg:text-2xl">{{news.title}}</h1>
+        <h2 class="text-gray-300 text-lg lg:text-xl py-5">{{news.subtitle}}</h2>
+        <div class="flex">
+          <a href="/news/{{news.id}}" class="btn mt-3">
+            <span>View Article</span>
+          </a>
+          {% if user.accountType === "admin" %}
+          <a
+            href="http://localhost:9000/editnews/{{news.id}}"
+            class="mt-3 ml-5"
+            type="submit"
+          >
+            <div class="btn"><span>edit</span></div>
+          </a>
+          {% endif %}
+        </div>
       </div>
-        <img
+      <img
         id="imagePreview"
         alt="Article Preview"
         src="/{{news.image}}"
         class="hidden max-h-40 md:block ml-10 rounded-lg border border-yellow-200"
       />
-    </a>
+    </div>
   </div>
   {% endfor %} {% if user.accountType === "admin" %}
   <div class="mt-10">
-    <form action="http://localhost:9000/createnews" method="get">
-      <button class="btn" type="submit"><span>Create News</span></button>
-    </form>
+    <a href="http://localhost:9000/createnews" class="btn" type="submit"
+      ><span>Create News</span></a
+    >
   </div>
   {% endif %}
 </div>

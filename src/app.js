@@ -4,7 +4,7 @@ import { DB } from "https://deno.land/x/sqlite@v3.7.0/mod.ts";
 
 import userMiddleware from "./utils/userMiddleware.js";
 import serveStaticFile from "./utils/serveStaticFile.js";
-import router from "./router/index.js";
+import routesHandler from "./router/index.js";
 
 import * as controller from "./controller.js";
 
@@ -30,7 +30,7 @@ export const handleRequest = async (request) => {
 
   ctx = await userMiddleware(ctx);
 
-  let result = await router.handle(ctx);
+  let result = await routesHandler(ctx);
 
   // Handle redirect
   if (ctx.redirect) {

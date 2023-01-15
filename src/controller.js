@@ -210,3 +210,11 @@ export const editNews = async (ctx, newsId) => {
   }
   return ctx;
 };
+
+export const deleteNews = async (ctx, newsId) => {
+  await newsModel.deleteNews(ctx, newsId);
+  ctx.redirect = new Response(null, {
+    status: 303,
+    headers: { Location: "/news" },
+  });
+};

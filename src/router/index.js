@@ -92,13 +92,18 @@ router.get(/^\/deletecomment\/[0-9]+$/, async (ctx) => {
 });
 
 router.get(/^\/editnews\/[0-9]+$/, async (ctx) => {
-  const newsId = ctx.request.url.split("/")[4];
+  const newsId = ctx.request.url.split("/")[4][0];
   return await controller.editNews(ctx, newsId);
 });
 
 router.post(/^\/editnews\/[0-9]+$/, async (ctx) => {
   const newsId = ctx.request.url.split("/")[4];
   return await formController.submitEditNews(ctx, newsId);
+});
+
+router.post(/^\/deletenews\/[0-9]+$/, async (ctx) => {
+  const newsId = ctx.request.url.split("/")[4];
+  return await controller.deleteNews(ctx, newsId);
 });
 
 export default router;

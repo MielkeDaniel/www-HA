@@ -165,6 +165,8 @@ export const deleteComment = async (ctx, commentId) => {
   return true;
 };
 
+export const deleteNewsArticle = async (ctx, newsId) => {};
+
 export const editNews = async (
   ctx,
   newsId,

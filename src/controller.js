@@ -44,8 +44,10 @@ export const profile = async (ctx, profilename) => {
   const user = await readUserModel.getUser(ctx.db, ctx.user);
   const userInfo = await readUserModel.getUser(ctx.db, profilename);
   const isProfileOwner = profilename === ctx.user;
+  console.log(ctx.user);
 
   if (isProfileOwner) {
+    console.log("am owner");
     ctx.response.body = ctx.nunjucks.render("profile.html", {
       user,
     });

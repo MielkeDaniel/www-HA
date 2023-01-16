@@ -2,29 +2,14 @@ import router from "./routerClass.js";
 
 import * as newsController from "../controller/newsController.js";
 
-router.get(
-  /^\/createnews$/,
-  async (ctx) => await newsController.createNews(ctx)
-);
+router.get("/createnews", newsController.createNews);
 
-router.post(
-  /^\/uploadnews$/,
-  async (ctx) => await newsController.uploadNews(ctx)
-);
+router.post("/uploadnews", newsController.uploadNews);
 
-router.get(/^\/editnews\/[0-9]+$/, async (ctx) => {
-  const newsId = ctx.request.url.split("/")[4];
-  return await newsController.editNews(ctx, newsId);
-});
+router.get("/editnews/:newsId", newsController.editNews);
 
-router.post(/^\/editnews\/[0-9]+$/, async (ctx) => {
-  const newsId = ctx.request.url.split("/")[4];
-  return await newsController.submitEditNews(ctx, newsId);
-});
+router.post("/editnews/:newsId", newsController.submitEditNews);
 
-router.post(/^\/deletenews\/[0-9]+$/, async (ctx) => {
-  const newsId = ctx.request.url.split("/")[4];
-  return await newsController.deleteNewsArticle(ctx, newsId);
-});
+router.post("/deletenews/:newsId", newsController.deleteNewsArticle);
 
 export default router;

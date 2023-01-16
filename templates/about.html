@@ -1,0 +1,112 @@
+{% extends 'layout.html' %} {%block content%}
+<!-- Hero section -->
+<header class="ab-hero-section">
+  <h1 class="ab-hero-heading">About DFINITY</h1>
+</header>
+<!-- Hero section END -->
+
+<div class="ab-section-one-bridge"></div>
+
+<!-- Section One -->
+<section class="section-padding ab-section-one section-grid">
+  <div>
+    <img
+      class="ab-section-image"
+      src="/images/dominic_williams.jpg"
+      alt="CEO Image"
+    />
+    <p class="ab-image-description">CEO of DFINITY: Dominic Williams</p>
+  </div>
+  <div>
+    <div class="quote">
+      <div id="ct">
+        <div class="corner" id="left_top"></div>
+        <div class="corner" id="left_bottom"></div>
+        <div class="corner" id="right_top"></div>
+        <div class="corner" id="right_bottom"></div>
+        <span>Dominic Williams</span>
+        <form
+          action="http://localhost:9000/updateQuote"
+          method="post"
+          id="updateQuoteForm"
+        >
+          <textarea
+            id="quote"
+            required
+            name="quote"
+            {% if user.username !== 'DominicWilliams' %}
+            readonly
+            {% endif %}
+            type="submit"
+            form="updateQuoteForm"
+            autocomplete="off"
+            class="bg-transparent text-lg text-center resize-none -mt-5"
+            cols="40"
+            rows="3"
+          >
+{{dominic.quote}}</textarea
+          >
+        </form>
+      </div>
+    </div>
+    {% if user.username === 'DominicWilliams' %}
+    <button type="submit" form="updateQuoteForm" class="btn">
+      <span>Tell us how your day was Willi!</span>
+    </button>
+    {% endif %}
+    <h3 class="section-heading">About Us</h3>
+    <p class="section-description">
+      The DFINITY Foundation is dedicated to bringing people and organizations
+      together to learn about and collaborate on the next-generation of
+      decentralized applications. The Internet Computer allows developers to
+      build dapps that are scaleable, run smart contracts at web speed, and
+      serve user experiences directly on chain. We believe in a future in which
+      every system and service is rebuilt and reimagined using smart contracts
+      and runs entirely from public blockchains without need for traditional IT.
+      We’re committed to connecting those who believe the same through our
+      events, content, and discussions.
+    </p>
+  </div>
+</section>
+<!-- Section One END -->
+
+<div class="ab-section-two-bridge"></div>
+
+<!-- Section Two -->
+<section class="ab-section-two section-padding">
+  <h2 class="ab-section-two-heading">The Mission</h2>
+  <div class="ab-section-two-grid">
+    <div>
+      <p class="section-description">
+        DFINITY believes, that "smart contracts", that run on a public
+        blockchain are a vastly superior new form of software. However,
+        traditional blockchains provide hosting frameworks for smart contracts
+        that are highly limiting. We believe that once these limitations are
+        removed by a next generation blockchain, a "blockchain singularity" will
+        occur, in which the majority of the world's systems and services will be
+        rebuilt entirely from smart contracts. In the process, these systems and
+        services will be fundamentally reimagined, changing how our information
+        systems, financial systems, economy and society works, by leveraging the
+        many new capabilities that smart contracts provide.
+      </p>
+    </div>
+    <div>
+      <p class="section-description">
+        Our mission is to develop technology that supports the next generation
+        Internet Computer blockchain network and ecosystem. Among many firsts,
+        the Internet Computer is the first public blockchain that can scale the
+        capacity it provides to smart contracts without bound, allowing it to
+        process and maintain any amount of data required. It can run smart
+        contracts with efficiency approaching that of traditional software,
+        while keeping costs low and predictable. It hosts smart contracts that
+        run at web speed, and which can serve interactive web content directly
+        to end users without intermediaries, providing for the creation of
+        systems and services that run entirely from a blockchain. The blockchain
+        also runs under the control of an algorithmic governance system and is
+        self-directed.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- Section Two END -->
+{%endblock%}

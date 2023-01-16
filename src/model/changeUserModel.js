@@ -4,7 +4,7 @@ export const createUser = async (db, username, password) => {
   password = await bcrypt.hash(password);
   await db.query(
     `INSERT INTO users (username, password, description, accountType) VALUES (?, ?, ?, ?);`,
-    [username, password, "Hi, I´m " + username + "!", "standard"]
+    [username, password, "Hi, I´m " + username + "!", "standard"],
   );
   let user = await db.query(`SELECT * FROM users WHERE username = ?;`, [
     username,

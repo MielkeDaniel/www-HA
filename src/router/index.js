@@ -3,6 +3,8 @@ import profileRouter from "./profileRoutes.js";
 import newsRouter from "./newsRoutes.js";
 import commentRouter from "./commentRoutes.js";
 
+import dominicsRouter from "../dominicsPersonalFolder/dominicsPersonalRouter.js";
+
 const routesHandler = async (ctx) => {
   let result;
 
@@ -13,6 +15,8 @@ const routesHandler = async (ctx) => {
   result = await newsRouter.handle(ctx);
   if (result) return result;
   result = await commentRouter.handle(ctx);
+  if (result) return result;
+  result = await dominicsRouter.handle(ctx);
 
   return result;
 };

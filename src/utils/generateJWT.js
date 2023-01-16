@@ -8,7 +8,7 @@ const generateJWT = async (username) => {
   const jwt = await create(
     { alg: "HS512", typ: "JWT" },
     payload,
-    Deno.env.get("JWT_SECRET")
+    Deno.env.get("JWT_SECRET"),
   );
   return jwt;
 };

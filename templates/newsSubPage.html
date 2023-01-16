@@ -4,7 +4,7 @@
 </div>
 {% else %}
 <div class="px-10 lg:px-20">
-  <div class="">
+  <div>
     <!-- Article -->
     <h1 class="mt-32 text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
     <div class="lg:flex">
@@ -14,7 +14,7 @@
         <p class="text-xl text-gray-500 my-5">written by {{news.author}}</p>
       </div>
       <img
-        class="2xl:max-h-96 xl:max-h-80 max-h-60 rounded-xl border border-yellow-200 mt-16 lg:mx-auto p-5"
+        class="2xl:max-h-96 xl:max-h-80 max-h-60 border border-yellow-200 mt-16 lg:mx-auto"
         id="imagePreview"
         alt="Article Preview"
         src="/{{news.image}}"

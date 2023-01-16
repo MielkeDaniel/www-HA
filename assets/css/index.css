@@ -1711,7 +1711,7 @@ img {
   padding: 0 10px;
   font-size: 25px;
   position: relative;
-  top: -28px;
+  top: -35px;
 }
 .corner {
   height: 30px;
@@ -1724,8 +1724,8 @@ img {
 }
 
 .block-p {
-  margin-top: 12px;
   font-size: 20px;
+  margin-top: -2rem;
 }
 
 #left_top {
@@ -1756,7 +1756,7 @@ img {
   }
 
   .quote {
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
   }
 }
 /* ---------------------- Blockquote END ---------------------- */

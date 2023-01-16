@@ -2,36 +2,34 @@ import router from "./routerClass.js";
 
 import * as pagesController from "../controller/pagesController.js";
 
-router.get(/^\/$/, async (ctx) => await pagesController.index(ctx));
+// index
+router.get("/", pagesController.index);
 
-// /profile/username
-router.get(/^\/profile\/[a-zA-Z0-9]+$/, async (ctx) => {
-  const username = ctx.request.url.split("/")[4];
-  return await pagesController.profile(ctx, username);
-});
+// news
+router.get("/news", pagesController.news);
 
-router.get(/^\/news$/, async (ctx) => await pagesController.news(ctx));
+// login
+router.get("/login", pagesController.login);
 
-// /news/newsId
-router.get(/^\/news\/[0-9]+$/, async (ctx) => {
-  const newsId = ctx.request.url.split("/")[4];
-  return await pagesController.newsSubPage(ctx, newsId);
-});
-
-router.get(/^\/login$/, async (ctx) => await pagesController.login(ctx));
-
-router.get(
-  /^\/createaccount$/,
-  async (ctx) => await pagesController.createAccount(ctx)
-);
+// create account
+router.get("/createaccount", pagesController.createAccount);
 
 // colophon
-router.get(/^\/colophon$/, async (ctx) => await pagesController.colophon(ctx));
+router.get("/colophon", pagesController.colophon);
 
 // imprint
-router.get(/^\/imprint$/, async (ctx) => await pagesController.imprint(ctx));
+router.get("/imprint", pagesController.imprint);
 
 // privacy
-router.get(/^\/privacy$/, async (ctx) => await pagesController.privacy(ctx));
+router.get("/privacy", pagesController.privacy);
+
+// /profile/username
+router.get("/profile/:username", pagesController.profile);
+
+// /news/newsId
+router.get("/news/:newsId", pagesController.newsSubPage);
+
+// /about
+router.get("/about", pagesController.about);
 
 export default router;

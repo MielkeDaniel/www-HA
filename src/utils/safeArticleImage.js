@@ -11,7 +11,7 @@ const uploadProfilePicture = async (image) => {
         create: true,
         write: true,
         truncate: true,
-      }
+      },
     );
     await image.stream().pipeTo(destFile.writable);
     return filename;

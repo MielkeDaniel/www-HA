@@ -7,31 +7,21 @@ class Router {
   }
 
   get(path, callback) {
-    if (!(path instanceof RegExp)) {
-      throw new Error("Routes must be defined using regular expressions");
-    }
-    this.routes.get.push({ path, callback });
+    const pattern = new URLPattern({ pathname: path });
+    this.routes.get.push({ pattern, callback });
   }
 
   post(path, callback) {
-    if (!(path instanceof RegExp)) {
-      throw new Error("Routes must be defined using regular expressions");
-    }
-    this.routes.post.push({ path, callback });
+    const pattern = new URLPattern({ pathname: path });
+    this.routes.post.push({ pattern, callback });
   }
 
   async handle(ctx) {
-    let { method, url } = ctx.request;
-    // remove ? from get request
-    if (url.includes("?")) {
-      url = url.split("?")[0];
-    }
-    const path = new URL(url).pathname;
-    let match;
+    const { method, url } = ctx.request;
     for (const route of this.routes[method.toLowerCase()]) {
-      match = path.match(route.path);
+      const match = route.pattern.exec(url);
       if (match) {
-        ctx.params = match.groups;
+        ctx.params = match.pathname.groups;
         ctx = await route.callback(ctx);
         break;
       }

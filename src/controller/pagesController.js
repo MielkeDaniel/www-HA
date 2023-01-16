@@ -1,12 +1,13 @@
 import * as readUserModel from "../model/readUserModel.js";
 import * as newsModel from "../model/newsModel.js";
 import * as commentsModel from "../model/commentsModel.js";
+import * as dominicsModel from "../dominicsPersonalFolder/dominicsModel.js";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 
-export const newsSubPage = async (ctx, newsId) => {
+export const newsSubPage = async (ctx) => {
   const user = await readUserModel.getUser(ctx.db, ctx.user);
-  const news = await newsModel.getNewsById(ctx, newsId);
-  const comments = await commentsModel.getComments(ctx, newsId);
+  const news = await newsModel.getNewsById(ctx, ctx.params.newsId);
+  const comments = await commentsModel.getComments(ctx, ctx.params.newsId);
   if (news === false || news === undefined) {
     ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
       errors: { news: "News-article not found!" },
@@ -68,10 +69,10 @@ export const index = async (ctx) => {
   return ctx;
 };
 
-export const profile = async (ctx, profilename) => {
+export const profile = async (ctx) => {
   const user = await readUserModel.getUser(ctx.db, ctx.user);
-  const userInfo = await readUserModel.getUser(ctx.db, profilename);
-  const isProfileOwner = profilename === ctx.user;
+  const userInfo = await readUserModel.getUser(ctx.db, ctx.params.username);
+  const isProfileOwner = ctx.params.username === ctx.user;
 
   if (isProfileOwner) {
     ctx.response.body = ctx.nunjucks.render("profile.html", {
@@ -120,6 +121,18 @@ export const imprint = (ctx) => {
 export const privacy = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("privacy.html", {
     user: { username: ctx.user },
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};
+
+export const about = async (ctx) => {
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  const quote = await dominicsModel.getDominicsQuote(ctx);
+  ctx.response.body = ctx.nunjucks.render("about.html", {
+    dominic: { quote },
+    user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";

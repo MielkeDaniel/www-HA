@@ -3,9 +3,9 @@ import * as newsModel from "../model/newsModel.js";
 import uploadArticleImage from "../utils/safeArticleImage.js";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 
-export const editNews = async (ctx, newsId) => {
+export const editNews = async (ctx) => {
   const user = await readUserModel.getUser(ctx.db, ctx.user);
-  const news = await newsModel.getNewsById(ctx, newsId);
+  const news = await newsModel.getNewsById(ctx, ctx.params.newsId);
   const isAdmin = user && user.accountType === "admin";
   if (!isAdmin || news === false) {
     ctx.response.body = ctx.nunjucks.render("editNews.html", {
@@ -28,8 +28,8 @@ export const editNews = async (ctx, newsId) => {
   return ctx;
 };
 
-export const deleteNewsArticle = async (ctx, newsId) => {
-  await newsModel.deleteNewsArticle(ctx, newsId);
+export const deleteNewsArticle = async (ctx) => {
+  await newsModel.deleteNewsArticle(ctx, ctx.params.newsId);
   ctx.redirect = new Response(null, {
     status: 303,
     headers: { Location: "/news" },
@@ -58,7 +58,7 @@ export const createNews = async (ctx) => {
   return ctx;
 };
 
-export const submitEditNews = async (ctx, newsId) => {
+export const submitEditNews = async (ctx) => {
   const formdata = await ctx.request.formData();
   const title = formdata.get("title");
   const subtitle = formdata.get("subtitle");
@@ -67,10 +67,17 @@ export const submitEditNews = async (ctx, newsId) => {
 
   const imageName = await uploadArticleImage(image);
 
-  await newsModel.editNews(ctx, newsId, title, subtitle, article, imageName);
+  await newsModel.editNews(
+    ctx,
+    ctx.params.newsId,
+    title,
+    subtitle,
+    article,
+    imageName,
+  );
   ctx.redirect = new Response(null, {
     status: 302,
-    headers: { Location: "/news/" + newsId },
+    headers: { Location: "/news/" + ctx.params.newsId },
   });
   return ctx;
 };
@@ -90,7 +97,7 @@ export const uploadNews = async (ctx) => {
     subtitle,
     article,
     imageName,
-    ctx.user
+    ctx.user,
   );
   ctx.redirect = new Response(null, {
     status: 302,

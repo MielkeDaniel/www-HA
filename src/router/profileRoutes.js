@@ -2,46 +2,28 @@ import router from "./routerClass.js";
 
 import * as profileController from "../controller/profileController.js";
 
-router.post(
-  /^\/createaccount$/,
-  async (ctx) => await profileController.submitCreateAccount(ctx)
-);
+router.post("/login", profileController.submitLogin);
 
-router.post(
-  /^\/login$/,
-  async (ctx) => await profileController.submitLogin(ctx)
-);
+router.post("/logout", profileController.logout);
 
-router.post(
-  /^\/profile\/[a-zA-Z0-9]+$/,
-  async (ctx) => await profileController.changeUsername(ctx)
-);
+router.post("/changeusername", profileController.changeUsername);
+
+router.post("/imageupload", profileController.imageUpload);
+
+router.post("/profile/:username", profileController.changeUsername);
+
+router.post("/createaccount", profileController.submitCreateAccount);
 
 router.get(
-  /^\/profile\/[a-zA-Z0-9]+\/changepassword$/,
-  async (ctx) => await profileController.changePassword(ctx)
+  "/profile/:username/changepassword",
+  profileController.changePassword
 );
 
 router.post(
-  /^\/profile\/[a-zA-Z0-9]+\/changepassword$/,
-  async (ctx) => await profileController.submitChangePassword(ctx)
+  "/profile/:username/changepassword",
+  profileController.submitChangePassword
 );
 
-router.post(/^\/logout$/, async (ctx) => await profileController.logout(ctx));
-
-router.post(
-  /^\/changeusername$/,
-  async (ctx) => await profileController.changeUsername(ctx)
-);
-
-router.post(
-  /^\/changedescription$/,
-  async (ctx) => await profileController.changeDescription(ctx)
-);
-
-router.post(
-  /^\/imageupload$/,
-  async (ctx) => await profileController.imageUpload(ctx)
-);
+router.post("/changedescription", profileController.changeDescription);
 
 export default router;

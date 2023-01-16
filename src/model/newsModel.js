@@ -6,12 +6,12 @@ export const createNews = async (
   subtitle,
   article,
   image,
-  author
+  author,
 ) => {
   const date = new Date();
   await ctx.db.query(
     `INSERT INTO news (title, subtitle, article, image, author, date) VALUES (?, ?, ?, ?, ?, ?);`,
-    [title, subtitle, article, image, author, date.toLocaleDateString()]
+    [title, subtitle, article, image, author, date.toLocaleDateString()],
   );
   return true;
 };
@@ -62,7 +62,7 @@ export const editNews = async (
   title,
   subtitle,
   article,
-  imageName
+  imageName,
 ) => {
   let newImageName;
   const oldImageName = ctx.db.query(`SELECT image FROM news WHERE id = ?;`, [
@@ -77,7 +77,7 @@ export const editNews = async (
   }
   await ctx.db.query(
     `UPDATE news SET title = ?, subtitle = ?, article = ?, image = ? WHERE id = ?;`,
-    [title, subtitle, article, newImageName, newsId]
+    [title, subtitle, article, newImageName, newsId],
   );
   return true;
 };

@@ -2,7 +2,15 @@ export const comment = async (ctx, newsId, comment, profilePicture) => {
   const date = new Date();
   await ctx.db.query(
     `INSERT INTO comments (author, article_id, comment, upvotes, downvotes, date, profilepicture) VALUES (?, ?, ?, ?, ?, ?, ?);`,
-    [ctx.user, newsId, comment, 0, 0, date.toLocaleDateString(), profilePicture]
+    [
+      ctx.user,
+      newsId,
+      comment,
+      0,
+      0,
+      date.toLocaleDateString(),
+      profilePicture,
+    ],
   );
   return true;
 };
@@ -10,7 +18,7 @@ export const comment = async (ctx, newsId, comment, profilePicture) => {
 export const getComments = async (ctx, newsId) => {
   const comments = await ctx.db.query(
     `SELECT * FROM comments WHERE article_id = ?;`,
-    [newsId]
+    [newsId],
   );
   const sortedComments = comments
     .map((comment) => {
@@ -32,40 +40,40 @@ export const getComments = async (ctx, newsId) => {
 export const upvoteComment = async (ctx, commentId) => {
   const votedComment = await ctx.db.query(
     `SELECT * FROM votes WHERE user_id = ? AND comment_id = ?;`,
-    [ctx.user, commentId]
+    [ctx.user, commentId],
   );
   if (votedComment.length > 0 && votedComment[0][3] === "upvote") {
     await ctx.db.query(
       `DELETE FROM votes WHERE user_id = ? AND comment_id = ?;`,
-      [ctx.user, commentId]
+      [ctx.user, commentId],
     );
     await ctx.db.query(
       `UPDATE comments SET upvotes = upvotes - 1 WHERE id = ?;`,
-      [commentId]
+      [commentId],
     );
     return true;
   } else if (votedComment.length > 0 && votedComment[0][3] === "downvote") {
     await ctx.db.query(
       `UPDATE votes SET vote = 'upvote' WHERE user_id = ? AND comment_id = ?;`,
-      [ctx.user, commentId]
+      [ctx.user, commentId],
     );
     await ctx.db.query(
       `UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?;`,
-      [commentId]
+      [commentId],
     );
     await ctx.db.query(
       `UPDATE comments SET downvotes = downvotes - 1 WHERE id = ?;`,
-      [commentId]
+      [commentId],
     );
     return true;
   }
   await ctx.db.query(
     `INSERT INTO votes (user_id, comment_id, vote) VALUES (?, ?, ?);`,
-    [ctx.user, commentId, "upvote"]
+    [ctx.user, commentId, "upvote"],
   );
   await ctx.db.query(
     `UPDATE comments SET upvotes = upvotes + 1 WHERE id = ?;`,
-    [commentId]
+    [commentId],
   );
   return true;
 };
@@ -73,40 +81,40 @@ export const upvoteComment = async (ctx, commentId) => {
 export const downvoteComment = async (ctx, commentId) => {
   const votedComment = await ctx.db.query(
     `SELECT * FROM votes WHERE user_id = ? AND comment_id = ?;`,
-    [ctx.user, commentId]
+    [ctx.user, commentId],
   );
   if (votedComment.length > 0 && votedComment[0][3] === "downvote") {
     await ctx.db.query(
       `DELETE FROM votes WHERE user_id = ? AND comment_id = ?;`,
-      [ctx.user, commentId]
+      [ctx.user, commentId],
     );
     await ctx.db.query(
       `UPDATE comments SET downvotes = downvotes - 1 WHERE id = ?;`,
-      [commentId]
+      [commentId],
     );
     return true;
   } else if (votedComment.length > 0 && votedComment[0][3] === "upvote") {
     await ctx.db.query(
       `UPDATE votes SET vote = 'downvote' WHERE user_id = ? AND comment_id = ?;`,
-      [ctx.user, commentId]
+      [ctx.user, commentId],
     );
     await ctx.db.query(
       `UPDATE comments SET upvotes = upvotes - 1 WHERE id = ?;`,
-      [commentId]
+      [commentId],
     );
     await ctx.db.query(
       `UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?;`,
-      [commentId]
+      [commentId],
     );
     return true;
   }
   await ctx.db.query(
     `INSERT INTO votes (user_id, comment_id, vote) VALUES (?, ?, ?);`,
-    [ctx.user, commentId, "downvote"]
+    [ctx.user, commentId, "downvote"],
   );
   await ctx.db.query(
     `UPDATE comments SET downvotes = downvotes + 1 WHERE id = ?;`,
-    [commentId]
+    [commentId],
   );
   return true;
 };

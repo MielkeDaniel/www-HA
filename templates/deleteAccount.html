@@ -1,0 +1,55 @@
+{% extends 'layout.html' %} {%block content%}
+<div class="h-screen">
+  <!-- Header section  -->
+  <header class="section-padding">
+    <h1 class="cf-page-heading">You are about to delete your Account!</h1>
+    <p class="heading-subtitle">
+      Please keep in mind, that once your account was removed from our database,
+      it cannot be restored.
+    </p>
+  </header>
+  <!-- Header section END -->
+
+  <!-- Form section -->
+  <section class="section-padding">
+    <form
+      action="http://localhost:9000/profile/{{user.username}}/deleteaccount"
+      method="post"
+    >
+      <!-- Personal Infos -->
+      <div class="padding-bottom">
+        <h2 class="cf-form-group-heading padding-top">Enter Password</h2>
+        {% if errors.password %}
+        <p class="text-red-500 pb-5">{{errors.password}}</p>
+        {% endif %}
+        <div class="input-group">
+          <input
+            id="password"
+            required
+            type="password"
+            name="password"
+            autocomplete="off"
+            class="input"
+          />
+          <label for="password" class="user-label">Password</label>
+        </div>
+      </div>
+      <!-- Personal Infos END -->
+
+      <!-- Submit buttons -->
+      <div class="cf-buttons-flex">
+        <div class="button-wrapper">
+          <a href="/profile/{{user.username}}" class="btn"
+            ><span>Cancel</span></a
+          >
+        </div>
+        <span class="cf-splitter"></span>
+        <div class="button-wrapper">
+          <button class="btn" type="submit"><span>Delete</span></button>
+        </div>
+      </div>
+      <!-- Submit buttons END -->
+    </form>
+  </section>
+</div>
+{%endblock%}

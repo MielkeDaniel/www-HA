@@ -187,3 +187,26 @@ export const changeDescription = async (ctx) => {
   ctx.response.headers["Location"] = "/profile/" + username;
   return ctx;
 };
+
+export const deleteAccount = async (ctx) => {
+  const formdata = await ctx.request.formData();
+  const password = formdata.get("password");
+  const username = ctx.user;
+  const userPw = await readUserModel.getUserPassword(ctx.db, username);
+  const isPasswordValid = await bcrypt.compare(password, userPw);
+
+  if (isPasswordValid) {
+    changeUserModel.deleteUser(ctx.db, username);
+    ctx.response.headers["Set-Cookie"] = `jwt=; HttpOnly; Path=/`;
+    ctx.response.status = 303;
+    ctx.response.headers["Location"] = "/";
+  } else {
+    ctx.response.body = ctx.nunjucks.render("deleteAccount.html", {
+      user: await readUserModel.getUser(ctx.db, username),
+      errors: { password: "Invalid password" },
+    });
+    ctx.response.status = 200;
+    ctx.response.headers["content-type"] = "text/html";
+  }
+  return ctx;
+};

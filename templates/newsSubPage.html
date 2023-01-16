@@ -73,9 +73,14 @@
           class="w-16 rounded-full mr-4 hidden md:block"
         />
         <div class="flex flex-col">
-          <a href="/profile/{{comment.author}}" class="text-xl text-yellow-200"
-            >{{comment.author}}</a
-          >
+          <div class="flex">
+            <a
+              href="/profile/{{comment.author}}"
+              class="text-xl text-yellow-200 mr-5"
+              >{{comment.author}}</a
+            >
+            <p class="text-xs mt-2">{{comment.date}}</p>
+          </div>
           <p class="text-gray-400 text-xl">{{comment.comment}}</p>
           <div class="flex mt-1">
             <div class="flex mr-5">

@@ -32,4 +32,7 @@ router.get("/news/:newsId", pagesController.newsSubPage);
 // /about
 router.get("/about", pagesController.about);
 
+// /profile/username/deleteaccount
+router.get("/profile/:username/deleteaccount", pagesController.deleteAccount);
+
 export default router;

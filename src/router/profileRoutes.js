@@ -26,4 +26,9 @@ router.post(
 
 router.post("/changedescription", profileController.changeDescription);
 
+router.post(
+  "/profile/:username/deleteaccount",
+  profileController.deleteAccount
+);
+
 export default router;

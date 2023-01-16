@@ -46,11 +46,11 @@ export const comment = async (ctx) => {
       ctx,
       ctx.params.newsId,
       comment,
-      user.profilePicture,
+      user.profilePicture
     ));
   ctx.redirect = new Response(null, {
     status: 302,
-    headers: { Location: user ? "/news/" + newsId : "/login" },
+    headers: { Location: user ? "/news/" + ctx.params.newsId : "/login" },
   });
   return ctx;
 };

@@ -138,3 +138,13 @@ export const about = async (ctx) => {
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
+
+export const deleteAccount = async (ctx) => {
+  const user = await readUserModel.getUser(ctx.db, ctx.user);
+  ctx.response.body = ctx.nunjucks.render("deleteAccount.html", {
+    user,
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};

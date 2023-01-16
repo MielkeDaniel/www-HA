@@ -4,12 +4,11 @@ import uploadArticleImage from "../utils/safeArticleImage.js";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 
 export const editNews = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
   const news = await newsModel.getNewsById(ctx, ctx.params.newsId);
-  const isAdmin = user && user.accountType === "admin";
+  const isAdmin = ctx.user && ctx.user.accountType === "admin";
   if (!isAdmin || news === false) {
     ctx.response.body = ctx.nunjucks.render("editNews.html", {
-      user,
+      user: ctx.user,
       errors: {
         admin:
           "The news either does not exist or your account does not have the priviledge to edit this articles.",
@@ -19,7 +18,7 @@ export const editNews = async (ctx) => {
     ctx.response.headers["content-type"] = "text/html";
   } else {
     ctx.response.body = ctx.nunjucks.render("editNews.html", {
-      user,
+      user: ctx.user,
       news,
     });
     ctx.response.status = 200;
@@ -29,6 +28,14 @@ export const editNews = async (ctx) => {
 };
 
 export const deleteNewsArticle = async (ctx) => {
+  if (!ctx.user || ctx.user.accountType !== "admin") {
+    ctx.redirect = new Response(null, {
+      status: 303,
+      headers: { Location: "/news" },
+    });
+    return ctx;
+  }
+
   await newsModel.deleteNewsArticle(ctx, ctx.params.newsId);
   ctx.redirect = new Response(null, {
     status: 303,
@@ -37,10 +44,8 @@ export const deleteNewsArticle = async (ctx) => {
   return ctx;
 };
 
-export const createNews = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
-
-  const isAdmin = user && user.accountType === "admin";
+export const createNews = (ctx) => {
+  const isAdmin = ctx.user && ctx.user.accountType === "admin";
   if (!isAdmin) {
     ctx.response.body = ctx.nunjucks.render("createNews.html", {
       user,
@@ -50,7 +55,7 @@ export const createNews = async (ctx) => {
     ctx.response.headers["content-type"] = "text/html";
   } else {
     ctx.response.body = ctx.nunjucks.render("createNews.html", {
-      user,
+      user: ctx.user,
     });
     ctx.response.status = 200;
     ctx.response.headers["content-type"] = "text/html";
@@ -73,7 +78,7 @@ export const submitEditNews = async (ctx) => {
     title,
     subtitle,
     article,
-    imageName,
+    imageName
   );
   ctx.redirect = new Response(null, {
     status: 302,
@@ -97,7 +102,7 @@ export const uploadNews = async (ctx) => {
     subtitle,
     article,
     imageName,
-    ctx.user,
+    ctx.user.username
   );
   ctx.redirect = new Response(null, {
     status: 302,

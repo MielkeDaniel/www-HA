@@ -20,6 +20,9 @@ router.get("/colophon", pagesController.colophon);
 // imprint
 router.get("/imprint", pagesController.imprint);
 
+// change password
+router.get("/profile/:username/changepassword", pagesController.changePassword);
+
 // privacy
 router.get("/privacy", pagesController.privacy);
 

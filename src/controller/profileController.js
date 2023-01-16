@@ -7,28 +7,10 @@ import generateJWT from "../utils/generateJWT.js";
 import validateImage from "../utils/validateImage.js";
 import uploadProfilePicture from "../utils/uploadProfilePicture.js";
 
-export const changePassword = async (ctx) => {
-  if (!ctx.user) {
-    // redirect to login
-    ctx.redirect = new Response(null, {
-      status: 303,
-      headers: { Location: "/login" },
-    });
-    return ctx;
-  }
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
-  ctx.response.body = ctx.nunjucks.render("changePassword.html", {
-    user,
-  });
-  ctx.response.status = 200;
-  ctx.response.headers["content-type"] = "text/html";
-  return ctx;
-};
-
 export const imageUpload = async (ctx) => {
   const formdata = await ctx.request.formData();
   const image = formdata.get("image");
-  const username = ctx.user;
+  const username = ctx.user.username;
   const error = validateImage(image);
 
   if (error) {
@@ -47,7 +29,7 @@ export const imageUpload = async (ctx) => {
 };
 
 export const submitChangePassword = async (ctx) => {
-  const userPw = await readUserModel.getUserPassword(ctx.db, ctx.user);
+  const userPw = await readUserModel.getUserPassword(ctx.db, ctx.user.username);
   const formData = await ctx.request.formData();
   const oldPassword = formData.get("oldPw");
   const newPassword = formData.get("newPw");
@@ -64,12 +46,12 @@ export const submitChangePassword = async (ctx) => {
     isNotSamePassword &&
     isPasswordLengthValid
   ) {
-    changeUserModel.changePassword(ctx.db, ctx.user, newPassword);
+    changeUserModel.changePassword(ctx.db, ctx.user.username, newPassword);
     ctx.response.status = 303;
-    ctx.response.headers["Location"] = "/profile/" + ctx.user;
+    ctx.response.headers["Location"] = "/profile/" + ctx.user.username;
   } else {
     ctx.response.body = ctx.nunjucks.render("changePassword.html", {
-      user: { username: ctx.user },
+      user: { username: ctx.user.username },
       form: { oldPw: oldPassword, newPw: newPassword, newValPw: newPassword2 },
       errors: {
         oldPassword: !isPasswordValid ? "Invalid password" : "",
@@ -154,55 +136,62 @@ export const logout = (ctx) => {
 
 export const changeUsername = async (ctx) => {
   const formdata = await ctx.request.formData();
-  const username = ctx.user;
   const newUsername = formdata.get("username");
-  const userExists = await readUserModel.getUser(ctx.db, newUsername);
 
-  if (userExists) {
+  if (newUsername) {
+    const userExists = await readUserModel.getUser(ctx.db, newUsername);
+    if (userExists) {
+      ctx.response.body = ctx.nunjucks.render("profile.html", {
+        user: ctx.user,
+        errors: { username: "Username already exists" },
+      });
+      ctx.response.status = 200;
+      ctx.response.headers["content-type"] = "text/html";
+      return ctx;
+    } else {
+      changeUserModel.changeUsername(ctx.db, ctx.user.username, newUsername);
+      const jwt = await generateJWT(newUsername);
+      ctx.response.headers["Set-Cookie"] = `jwt=${jwt}; HttpOnly; Path=/`;
+      ctx.user = newUsername;
+      ctx.response.status = 303;
+      ctx.response.headers["Location"] = "/profile/" + newUsername;
+      return ctx;
+    }
+  } else {
     ctx.response.body = ctx.nunjucks.render("profile.html", {
-      user: await readUserModel.getUser(ctx.db, username),
-      errors: { username: "Username already exists" },
+      user: ctx.user,
+      errors: { username: "Username cannot be empty" },
     });
     ctx.response.status = 200;
     ctx.response.headers["content-type"] = "text/html";
     return ctx;
   }
-
-  changeUserModel.changeUsername(ctx.db, username, newUsername);
-  const jwt = await generateJWT(newUsername);
-  ctx.response.headers["Set-Cookie"] = `jwt=${jwt}; HttpOnly; Path=/`;
-  ctx.user = newUsername;
-  ctx.response.status = 303;
-  ctx.response.headers["Location"] = "/profile/" + newUsername;
-  return ctx;
 };
 
 export const changeDescription = async (ctx) => {
   const formdata = await ctx.request.formData();
-  const username = ctx.user;
   const description = formdata.get("description");
 
-  changeUserModel.changeDescription(ctx.db, username, description);
+  changeUserModel.changeDescription(ctx.db, ctx.user.username, description);
   ctx.response.status = 303;
-  ctx.response.headers["Location"] = "/profile/" + username;
+  ctx.response.headers["Location"] = "/profile/" + ctx.user.username;
   return ctx;
 };
 
 export const deleteAccount = async (ctx) => {
   const formdata = await ctx.request.formData();
   const password = formdata.get("password");
-  const username = ctx.user;
-  const userPw = await readUserModel.getUserPassword(ctx.db, username);
+  const userPw = await readUserModel.getUserPassword(ctx.db, ctx.user.username);
   const isPasswordValid = await bcrypt.compare(password, userPw);
 
   if (isPasswordValid) {
-    changeUserModel.deleteUser(ctx.db, username);
+    changeUserModel.deleteUser(ctx.db, ctx.user.username);
     ctx.response.headers["Set-Cookie"] = `jwt=; HttpOnly; Path=/`;
     ctx.response.status = 303;
     ctx.response.headers["Location"] = "/";
   } else {
     ctx.response.body = ctx.nunjucks.render("deleteAccount.html", {
-      user: await readUserModel.getUser(ctx.db, username),
+      user: ctx.user,
       errors: { password: "Invalid password" },
     });
     ctx.response.status = 200;

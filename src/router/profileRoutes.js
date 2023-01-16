@@ -14,11 +14,6 @@ router.post("/profile/:username", profileController.changeUsername);
 
 router.post("/createaccount", profileController.submitCreateAccount);
 
-router.get(
-  "/profile/:username/changepassword",
-  profileController.changePassword
-);
-
 router.post(
   "/profile/:username/changepassword",
   profileController.submitChangePassword

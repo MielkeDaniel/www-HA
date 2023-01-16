@@ -5,20 +5,19 @@ import * as dominicsModel from "../dominicsPersonalFolder/dominicsModel.js";
 import "https://deno.land/x/dotenv@v3.2.0/load.ts";
 
 export const newsSubPage = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
   const news = await newsModel.getNewsById(ctx, ctx.params.newsId);
   const comments = await commentsModel.getComments(ctx, ctx.params.newsId);
   if (news === false || news === undefined) {
     ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
       errors: { news: "News-article not found!" },
-      user,
+      user: ctx.user,
     });
     ctx.response.status = 200;
     ctx.response.headers["content-type"] = "text/html";
   } else {
     ctx.response.body = ctx.nunjucks.render("newsSubPage.html", {
       news,
-      user,
+      user: ctx.user,
       comments,
     });
     ctx.response.status = 200;
@@ -28,41 +27,37 @@ export const newsSubPage = async (ctx) => {
 };
 
 export const news = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
   const news = await newsModel.getNews(ctx);
   ctx.response.body = ctx.nunjucks.render("news.html", {
     news,
-    user,
+    user: ctx.user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
 
-export const createAccount = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
+export const createAccount = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("createAccount.html", {
-    user,
+    user: ctx.user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
 
-export const login = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
+export const login = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("login.html", {
-    user,
+    user: ctx.user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
 
-export const index = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
+export const index = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("index.html", {
-    user,
+    user: ctx.user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
@@ -70,20 +65,19 @@ export const index = async (ctx) => {
 };
 
 export const profile = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
   const userInfo = await readUserModel.getUser(ctx.db, ctx.params.username);
-  const isProfileOwner = ctx.params.username === ctx.user;
+  const isProfileOwner = ctx.params.username === ctx.user.username;
 
   if (isProfileOwner) {
     ctx.response.body = ctx.nunjucks.render("profile.html", {
-      user,
+      user: ctx.user,
     });
     ctx.response.status = 200;
     ctx.response.headers["content-type"] = "text/html";
   } else {
     ctx.response.body = ctx.nunjucks.render("staticProfile.html", {
       profile: userInfo,
-      user,
+      user: ctx.user,
     });
     ctx.response.status = userInfo ? 200 : 404;
     ctx.response.headers["content-type"] = "text/html";
@@ -128,21 +122,36 @@ export const privacy = (ctx) => {
 };
 
 export const about = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
   const quote = await dominicsModel.getDominicsQuote(ctx);
   ctx.response.body = ctx.nunjucks.render("about.html", {
     dominic: { quote },
-    user,
+    user: ctx.user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";
   return ctx;
 };
 
-export const deleteAccount = async (ctx) => {
-  const user = await readUserModel.getUser(ctx.db, ctx.user);
+export const deleteAccount = (ctx) => {
   ctx.response.body = ctx.nunjucks.render("deleteAccount.html", {
-    user,
+    user: ctx.user,
+  });
+  ctx.response.status = 200;
+  ctx.response.headers["content-type"] = "text/html";
+  return ctx;
+};
+
+export const changePassword = (ctx) => {
+  if (!ctx.user) {
+    // redirect to login
+    ctx.redirect = new Response(null, {
+      status: 303,
+      headers: { Location: "/login" },
+    });
+    return ctx;
+  }
+  ctx.response.body = ctx.nunjucks.render("changePassword.html", {
+    user: ctx.user,
   });
   ctx.response.status = 200;
   ctx.response.headers["content-type"] = "text/html";

@@ -3,10 +3,10 @@
   <h1 class="pt-80 text-center text-gray-400">{{errors.news}}</h1>
 </div>
 {% else %}
-<div class="px-10 lg:px-20">
+<div class="pt-32 px-10 lg:px-20">
   <div>
     <!-- Article -->
-    <h1 class="mt-32 text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
+    <h1 class="text-3xl text-yellow-200 mb-5">{{news.title}}</h1>
     <div class="lg:flex">
       <div class="lg:w-1/2">
         <h2 class="text-xl text-gray-300">{{news.subtitle}}</h2>
@@ -23,106 +23,185 @@
     <!-- Article END -->
 
     <!-- Comment box -->
-    <div class="mt-10 w-full lg:w-1/2">
+    <div class="mt-10 w-full lg:w-1/2 flex pb-4 border-b-2">
+      {% if user.profilePicture %}
+      <img
+        src="/{{user.profilePicture}}"
+        alt="Profile picture"
+        class="max-h-16 max-w-16 rounded-full mr-4 hidden lg:block"
+      />
+      {% else %}
+      <img
+        src="/images/standard-pp.png"
+        alt="Profile picture"
+        class="max-h-16 rounded-full mr-4 hidden lg:block"
+      />
+      {% endif %}
       <form
         id="postcommentform"
         action="http://localhost:9000/comment/{{news.id}}"
         method="post"
+        class="w-full"
       >
-        <div class="mb-10 w-full">
-          <div class="flex items-center w-full">
-            {% if user.profilePicture %}
-            <img
-              src="/{{user.profilePicture}}"
-              alt="Profile picture"
-              class="max-h-16 rounded-full mr-4 hidden lg:block"
-            />
-            {% else %}
-            <img
-              src="/images/standard-pp.png"
-              alt="Profile picture"
-              class="max-h-16 rounded-full mr-4 hidden lg:block"
-            />
-            {% endif %}
-            <label for="commentbox" class="hidden-label">hello</label>
-            <textarea
-              class="w-full p-5 rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
-              name="comment"
-              id="commentbox"
-              required
-              placeholder="Comment"
-            ></textarea>
-          </div>
-          <div class="flex justify-end mt-8">
-            <button class="btn" type="submit" form="postcommentform">
-              <span>Comment</span>
-            </button>
-          </div>
+        <label for="commentbox" class="hidden-label"
+          >Write Comment
+          <textarea
+            class="w-full px-4 py-3 text-xl rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
+            name="comment"
+            id="commentbox"
+            required
+            placeholder="Comment"
+          ></textarea>
+        </label>
+        <div class="flex justify-end mt-8">
+          <button class="btn" type="submit" form="postcommentform">
+            <span>Comment</span>
+          </button>
         </div>
       </form>
     </div>
     <!-- Comment box END -->
 
     <!-- Comments -->
-    <div class="mt-10 w-full lg:w-1/2">
-      {% for comment in comments %}
-      <div class="flex items-center py-10 border-t w-full">
-        <img
-          src="/{{comment.profilePicture}}"
-          alt="Profile picture"
-          class="w-16 rounded-full mr-4 hidden md:block"
-        />
-        <div class="flex flex-col">
-          <div class="flex">
-            <a
-              href="/profile/{{comment.author}}"
-              class="text-xl text-yellow-200 mr-5"
-              >{{comment.author}}</a
+    {% for comment in comments %}
+    <div class="flex b-12 my-6">
+      <img
+        src="/{{comment.profilePicture}}"
+        alt="Profile picture"
+        class="max-h-14 max-w-14 rounded-full hidden md:block mr-6"
+      />
+      <div>
+        <div class="flex mb-4">
+          <a
+            href="/profile/{{comment.author}}"
+            class="text-xl text-yellow-200 mr-5"
+            >{{comment.author}}</a
+          >
+          <p class="text-xs mt-2">{{comment.date}}</p>
+        </div>
+        <p class="text-gray-400 text-xl mb-2">{{comment.comment}}</p>
+        <div class="flex">
+          <form action="/upvote/{{comment.id}}" method="post">
+            <button type="submit">
+              <img
+                src="/images/like.png"
+                alt="likebutton"
+                class="w-6 h-6 mr-2 duration-200 hover:bg-yellow-600 p-1"
+              />
+            </button>
+          </form>
+          <p class="text-gray-400 text-xl mr-6">{{comment.upvotes}}</p>
+          <form action="/downvote/{{comment.id}}" method="post">
+            <button type="submit">
+              <img
+                src="/images/dislike.png"
+                alt="dislikebutton"
+                class="w-6 h-6 mr-2 duration-200 hover:bg-yellow-600 p-1 mt-1"
+              />
+            </button>
+          </form>
+          <p class="text-gray-400 text-xl">{{comment.downvotes}}</p>
+          {% if user.username === comment.author or user.accountType === "admin"
+          %}
+          <form action="/deletecomment/{{comment.id}}" method="post">
+            <button
+              type="submit"
+              class="text-gray-400 ml-3 pt-0.5 duration-200 hover:text-yellow-200"
             >
-            <p class="text-xs mt-2">{{comment.date}}</p>
-          </div>
-          <p class="text-gray-400 text-xl">{{comment.comment}}</p>
-          <div class="flex mt-1">
-            <div class="flex mr-5">
-              <form action="/upvote/{{comment.id}}" method="post">
-                <button type="submit">
-                  <img
-                    src="/images/like.png"
-                    alt="likebutton"
-                    class="w-6 h-6 mr-2 duration-200 hover:bg-yellow-600 p-1"
-                  />
-                </button>
-              </form>
-              <p class="text-gray-400 text-xl">{{comment.upvotes}}</p>
+              delete
+            </button>
+          </form>
+          {% endif %}
+        </div>
+        <!-- Replies-->
+        <div class="drawer">
+          <input
+            class="drawer__trigger"
+            id="{{comment.id}}"
+            type="checkbox"
+          /><label class="drawer__title" for="{{comment.id}}"
+            >{{comment.replies.length}}&nbsp;&nbsp;Antworten</label
+          >
+          <div class="drawer__content-wrapper max-w-48">
+            <div class="drawer__content">
+              <!-- Create Reply -->
+              {% if user %}
+              <div class="mb-10 mt-4 w-full flex">
+                {% if user.profilePicture %}
+                <img
+                  src="/{{user.profilePicture}}"
+                  alt="Profile picture"
+                  class="max-h-16 rounded-full mr-4 hidden lg:block"
+                />
+                {% else %}
+                <img
+                  src="/images/standard-pp.png"
+                  alt="Profile picture"
+                  class="max-h-12 max-w-12 rounded-full mr-4 hidden lg:block"
+                />
+                {% endif %}
+                <form
+                  action="http://localhost:9000/reply/{{news.id}}/{{comment.id}}"
+                  method="post"
+                  class="w-96"
+                >
+                  <label for="replybox" class="hidden-label"
+                    >Write reply
+                    <textarea
+                      class="w-full px-4 py-3 text-xl rounded-xl bg-gray-800 text-gray-200 border-2 border-yellow-200"
+                      name="reply"
+                      id="replybox"
+                      required
+                      placeholder="reply"
+                    ></textarea>
+                  </label>
+                  <div class="flex justify-end mt-4">
+                    <button class="btn" type="submit">
+                      <span>Reply</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              {% endif %}
+              <!-- Create Reply END -->
+
+              <!-- Replies Content -->
+              {% for reply in comment.replies %}
+              <div class="flex mb-6">
+                <img
+                  alt="creator profile image"
+                  src="/{{reply.profilePicture}}"
+                  class="max-h-12 max-w-12 rounded-full mr-4 hidden lg:block mr-6"
+                />
+                <div>
+                  <div class="flex mb-4">
+                    <a class="text-xl text-yellow-200 mr-5">{{reply.author}}</a>
+                    <p class="text-xs mt-2">{{reply.date}}</p>
+                  </div>
+                  <p class="text-gray-400 text-xl mb-2">{{reply.reply}}</p>
+                  {% if reply.author === user.username or user.accountType ===
+                  "admin" %}
+                  <form method="POST" action="/deletereply/{{reply.id}}">
+                    <button
+                      class="text-gray-400 duration-200 hover:text-yellow-200"
+                    >
+                      delete
+                    </button>
+                  </form>
+                  {% endif %}
+                </div>
+              </div>
+              {% endfor %}
+              <!-- Replies Content END -->
+              <!-- Replies END -->
             </div>
-            <div class="flex">
-              <form action="/downvote/{{comment.id}}" method="post">
-                <button type="submit">
-                  <img
-                    src="/images/dislike.png"
-                    alt="dislikebutton"
-                    class="w-6 h-6 mr-2 duration-200 hover:bg-yellow-600 p-1 mt-1"
-                  />
-                </button>
-              </form>
-              <p class="text-gray-400 text-xl">{{comment.downvotes}}</p>
-            </div>
-            {% if user.username == comment.author %}
-            <form action="/deletecomment/{{comment.id}}" method="post">
-              <button
-                type="submit"
-                class="text-gray-400 ml-3 pt-0.5 duration-200 hover:text-yellow-200"
-              >
-                delete
-              </button>
-            </form>
-            {% endif %}
           </div>
         </div>
+        <!-- Replies END-->
       </div>
-      {% endfor %} {% endif %}
       <!-- Comments END -->
     </div>
+    {% endfor %} {% endif %}
   </div>
 </div>
 {%endblock%}

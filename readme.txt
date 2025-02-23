@@ -1,9 +1,5 @@
-Diese Hausarbeit wurde von Daniel Mielke udn Sander Speitling im Rahmen der Hausarbeit in dem Modulfach www-Programmierung erstellt. 
+This paper was prepared by Daniel Mielke and Sander Speitling as part of their coursework in the module "Web Programming."
 
-Es gibt ein admin-Konto, welches auf der Datenbank hinterlegt ist. 
-Benutzername und Passwort lauten jeweils "admin". 
-Mit diesem Account ist es aufgrund des in der Datenbank hinterlgtem Accounttypen möglich gewisse Änderungen auf der Website zu unternehmen. 
-Diese Rechte haben andere User nicht, da die dazugehörigen Routen im Backend blockiert werden. 
+An admin account is registered in the database. The username and password are both set to "admin." This account type, as defined in the database, grants the ability to perform specific modifications on the website. Other users do not have these privileges, as the corresponding routes in the backend are restricted.
 
-Ähnliches gibt es für den Account mit dem Namen "DominicWilliams" und dem Accountpasswort "1234". 
-Diese Funktion ist auf der About-Page zu finden. 
+A similar setup exists for the account with the username "DominicWilliams" and the password "1234." This functionality can be accessed via the About page.
